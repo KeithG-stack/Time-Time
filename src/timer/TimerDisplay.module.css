@@ -1,0 +1,73 @@
+.timerDisplay {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    transition: background-color 0.5s, color 0.5s;
+  }
+  
+  .time {
+    font-size: 2em;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .controls button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  
+  .inputContainer {
+    margin-top: 20px;
+  }
+  
+  .inputContainer label {
+    margin-right: 10px;
+  }
+  
+  .inputContainer input {
+    padding: 5px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  
+  /* Dark mode variables */
+  .dark-mode {
+    --background-color: #000000;
+    --text-color: #ffffff;
+  }
+  
+  .light-mode {
+    --background-color: #ffffff;
+    --text-color: #000000;
+  }
