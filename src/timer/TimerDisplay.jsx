@@ -21,8 +21,11 @@ const TimerDisplay = ({ title }) => {
             // If the timer is running, set an interval to update the time every second
             interval = setInterval(() => {
                 setTime(prevTime => {
-                    if (prevTime === 1); {
+                    if (prevTime <= 1) {
                         playsound();
+                        setIsRunning(false);
+                        clearInterval(interval);
+                        return 0;
                     }
                     return prevTime - 1;
                 });
