@@ -11,7 +11,9 @@ const TimerDisplay = ({ title }) => {
     // State to keep track of whether the timer is running
     const [isRunning, setIsRunning] = useState(false);
     // want to keep track of custom time input
-    const [customTime, setCostumeTime] = useState(25);
+    const [hours, setHours] = useState(0);
+    const [minutes, setMinutes] = useState(25);
+    const [seconds, setSeconds] = useState(0);
     // Custom hook to determine if dark mode is enabled
     const isDarkMode = useDarkMode();
 
@@ -50,15 +52,23 @@ const TimerDisplay = ({ title }) => {
 
     // Function to handle the reset of the timer
     const handleReset = () => {
-        setTime(customTime * 60);
+        const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + parseInt(seconds);
+        setTime(totalSeconds);
         setIsRunning(false);
     };
 
     // want this to handle the custom time change
-    const handleCustomTimeChange = (e) => {
-        setCostumeTime(e.target.value);
+    const handleHoursChange = (e) => {
+        setHours(e.target.value);
     };
 
+    const handleMinutesChange = (e) => {
+        setMinutes(e.target.value);
+    };
+
+    const handleSecondsChange = (e) => {
+        setSeconds(e.target.value);
+    };
     // this is the sound that will play when the timer is over
     const playsound = () => {
         const audio = new Audio('/alarm.mp3');
@@ -69,15 +79,34 @@ const TimerDisplay = ({ title }) => {
         <div className={`${styles.timerDisplay} ${isDarkMode ? 'dark-mode' : 'light-mode'}`} role="timer" aria-live="polite">
             <h1>{title}</h1>
             {/* Input for custom time */}
-            <input
-                type="number"
-                value={customTime}
-                onChange={handleCustomTimeChange}
-                min="1"
-                className={styles.customTimeInput}
+            <div className={styles.timeInputs}>
+                <input
+                    type="number"
+                    value={hours}
+                    onChange={handleHoursChange}
+                    min="0"
+                    placeholder="Hours"
+                    className={styles.customTimeInput}
                 />
+                <input 
+                    type="number"
+                    value={minutes}
+                    onChange={handleMinutesChange}
+                    min="0"
+                    placeholder="Minutes"
+                    className={styles.customTimeInput}
+                />
+                <input
+                    type="number"
+                    value={seconds}
+                    onChange={handleSecondsChange}
+                    min="0"
+                    placeholder="Seconds"
+                    className={styles.customTimeInput}
+                />
+            </div>
             {/* Display the timer value in MM:SS format */}
-            <p className={styles.time}>{new Date(time * 1000).toISOString().substr(14, 5)}</p>
+            <p className={styles.time}>{new Date(time * 1000).toISOString().substr(11, 8)}</p>
             <StartStopButton isRunning={isRunning} onStart={handleStart} onStop={handleStop} /> {/* Display the StartStopButton component */}
             <ResetButton onReset={handleReset} /> {/* Display the ResetButton component */}
         </div>
