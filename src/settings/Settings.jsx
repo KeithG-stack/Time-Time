@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '../timer/Settings.module.css';
+import styles from '../settings/Settings.module.css';
 
 
 const Settings = ({ onThemeChange }) => {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import TimerDisplay from './timer/TimerDisplay.jsx'; // Import TimerDisplay component
-import Settings from './components/Settings.jsx'; // Import Settings component
+import Settings from './settings/Settings.jsx'; // Import Settings component
+import Notifications from './settings/Notifications.jsx'; // Import Notifications component
+import { NotificationProvider } from './settings/settingsContext'; // Import NotificationProvider
 import './App.css';
 
 function App() {
@@ -15,10 +17,13 @@ function App() {
     }, [themeColor]);
 
     return (
+      <NotificationProvider>
         <div>
-            <TimerDisplay title="Pomodoro Timer" />
+            <TimerDisplay title="Focus Timer" />
             <Settings onThemeChange={handleThemeChange} />
+      
         </div>
+        </NotificationProvider>
     );
 }
 
