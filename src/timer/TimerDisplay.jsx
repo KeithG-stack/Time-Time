@@ -4,7 +4,7 @@ import ResetButton from "../components/ResetButton"; // Import ResetButton compo
 import StartStopButton from "./TimerControls"; // Import StartStopButton component
 import styles from './TimerDisplay.module.css'; // Import styles
 import { useDarkMode } from '../hooks/useDarkMode'; // Import custom hook for dark mode
-
+import { useNotifications } from '../settings/settingsContext'; // Import useNotifications hook
 const TimerDisplay = ({ title }) => {
     // State to keep track of the time
     const [time, setTime] = useState(25 * 60);
@@ -16,6 +16,8 @@ const TimerDisplay = ({ title }) => {
     const [seconds, setSeconds] = useState(0);
     // Custom hook to determine if dark mode is enabled
     const isDarkMode = useDarkMode();
+    // Custom hook to access the notification context
+    const { addNotification } = useNotifications(); 
 
     useEffect(() => {
         let interval;
@@ -43,11 +45,13 @@ const TimerDisplay = ({ title }) => {
     // Function to handle the start of the timer
     const handleStart = () => {
         setIsRunning(true);
+        addNotification({ message: "Timer started", type: "info" });
     };
 
     // Function to handle the stop of the timer
     const handleStop = () => {
         setIsRunning(false);
+        addNotification({ message: "Timer stopped", type: "info" });
     };
 
     // Function to handle the reset of the timer
@@ -55,6 +59,7 @@ const TimerDisplay = ({ title }) => {
         const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + parseInt(seconds);
         setTime(totalSeconds);
         setIsRunning(false);
+        addNotification({ message: "Timer reset", type: "info" });
     };
 
     // want this to handle the custom time change

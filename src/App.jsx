@@ -17,12 +17,12 @@ function App() {
     }, [themeColor]);
 
     return (
-      <NotificationProvider>
-        <div>
-            <TimerDisplay title="Focus Timer" />
-            <Settings onThemeChange={handleThemeChange} />
-      
-        </div>
+        <NotificationProvider>
+            <div>
+                <TimerDisplay title="Focus Timer" />
+                <Settings onThemeChange={handleThemeChange} />
+                <Notifications /> {/* Include the Notifications component */}
+            </div>
         </NotificationProvider>
     );
 }
