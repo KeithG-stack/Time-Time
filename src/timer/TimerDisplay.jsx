@@ -5,6 +5,7 @@ import StartStopButton from "./TimerControls"; // Import StartStopButton compone
 import styles from './TimerDisplay.module.css'; // Import styles
 import { useDarkMode } from '../hooks/useDarkMode'; // Import custom hook for dark mode
 import { useNotifications } from '../settings/settingsContext'; // Import useNotifications hook
+import useAnalytics from '../hooks/NotiGang'; // Import useAnalytics hook
 const TimerDisplay = ({ title }) => {
     // State to keep track of the time
     const [time, setTime] = useState(25 * 60);
@@ -18,6 +19,8 @@ const TimerDisplay = ({ title }) => {
     const isDarkMode = useDarkMode();
     // Custom hook to access the notification context
     const { addNotification } = useNotifications(); 
+    // Custom hook to access the analytics context
+    const { trackSession} = useAnalytics();
 
     useEffect(() => {
         let interval;
@@ -46,6 +49,7 @@ const TimerDisplay = ({ title }) => {
     const handleStart = () => {
         setIsRunning(true);
         addNotification({ message: "Timer started", type: "info" });
+        trackSession ({ id: Date.now(), duration: time * 1000, });
     };
 
     // Function to handle the stop of the timer
@@ -80,6 +84,9 @@ const TimerDisplay = ({ title }) => {
         audio.play();
     };
 
+    const totalTime = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
+    const progress = (time / totalTime) * 100;
+
     return (
         <div className={`${styles.timerDisplay} ${isDarkMode ? 'dark-mode' : 'light-mode'}`} role="timer" aria-live="polite">
             <h1>{title}</h1>
@@ -109,6 +116,9 @@ const TimerDisplay = ({ title }) => {
                     placeholder="Seconds"
                     className={styles.customTimeInput}
                 />
+            </div>
+            <div className={styles.progressBarContainer}>
+                <div className={styles.progressBar} style={{width: `${progress}%` }}></div>
             </div>
             {/* Display the timer value in MM:SS format */}
             <p className={styles.time}>{new Date(time * 1000).toISOString().substr(11, 8)}</p>
