@@ -5,7 +5,9 @@ import StartStopButton from "./TimerControls"; // Import StartStopButton compone
 import styles from './TimerDisplay.module.css'; // Import styles
 import { useDarkMode } from '../hooks/useDarkMode'; // Import custom hook for dark mode
 import { useNotifications } from '../settings/settingsContext'; // Import useNotifications hook
-import useAnalytics from '../hooks/NotiGang'; // Import useAnalytics hook
+import useAnalytics from '../hooks/Analytics'; // Import useAnalytics hook
+import { achievements } from '../common/achievements'; // Import achievements array
+import { handleStreaks } from '../common/streaks';
 const TimerDisplay = ({ title }) => {
     // State to keep track of the time
     const [time, setTime] = useState(25 * 60);
@@ -15,13 +17,19 @@ const TimerDisplay = ({ title }) => {
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(25);
     const [seconds, setSeconds] = useState(0);
+    const [streak, setStreak] = useState(0);
     // Custom hook to determine if dark mode is enabled
     const isDarkMode = useDarkMode();
     // Custom hook to access the notification context
     const { addNotification } = useNotifications(); 
-    // Custom hook to access the analytics context
-    const { trackSession} = useAnalytics();
+    
+    const { trackSession, trackReset, unlockedAchievements } = useAnalytics(); // Get the trackSession and trackReset functions from the useAnalytics hook
 
+    useEffect(() => {
+        // Here's where the streaks are being handled when the component mounts
+        const currentStreak = handleStreaks();
+        setStreak(currentStreak);
+    }, []);
     useEffect(() => {
         let interval;
         if (isRunning) {
@@ -61,6 +69,7 @@ const TimerDisplay = ({ title }) => {
     // Function to handle the reset of the timer
     const handleReset = () => {
         const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + parseInt(seconds);
+        trackReset(time);
         setTime(totalSeconds);
         setIsRunning(false);
         addNotification({ message: "Timer reset", type: "info" });
@@ -87,9 +96,15 @@ const TimerDisplay = ({ title }) => {
     const totalTime = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
     const progress = (time / totalTime) * 100;
 
+    // Function to scroll to the achievements section
+    const scrollToAchievements = () => {
+        document.getElementById('achievements').scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
         <div className={`${styles.timerDisplay} ${isDarkMode ? 'dark-mode' : 'light-mode'}`} role="timer" aria-live="polite">
             <h1>{title}</h1>
+            <p>Current Streak: {streak} days</p>
             {/* Input for custom time */}
             <div className={styles.timeInputs}>
                 <input
@@ -124,6 +139,16 @@ const TimerDisplay = ({ title }) => {
             <p className={styles.time}>{new Date(time * 1000).toISOString().substr(11, 8)}</p>
             <StartStopButton isRunning={isRunning} onStart={handleStart} onStop={handleStop} /> {/* Display the StartStopButton component */}
             <ResetButton onReset={handleReset} /> {/* Display the ResetButton component */}
+             <button onClick={scrollToAchievements} className={styles.achievementsButton}>Achievements</button>
+            <div id="achievements" className={styles.achievements}>
+                <h2>Achievements</h2>
+                <ul>
+                    {unlockedAchievements.map((achievementId) => {
+                        const achievement = achievements.find(a => a.id === achievementId);
+                        return <li key={achievementId}>{achievement.description}</li>;
+                    })}
+               </ul>
+            </div>   
         </div>
     );
 };
