@@ -3,6 +3,7 @@ import TimerDisplay from './timer/TimerDisplay.jsx'; // Import TimerDisplay comp
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes components
 import Settings from './settings/Settings.jsx'; // Import Settings component
 import Notifications from './settings/Notifications.jsx'; // Import Notifications component
+import Navbar from './settings/Navbar.jsx'; // Import Navbar component
 import { NotificationProvider } from './settings/settingsContext'; // Import NotificationProvider
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
         <NotificationProvider>
             <Router>
                 <div>
+                    <Navbar /> {/* Include the Navbar component */}
                     <Routes>
                         <Route path="/" element={<TimerDisplay title="Focus Timer" />} />
                         <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} />} />
