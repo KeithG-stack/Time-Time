@@ -1,63 +1,88 @@
-# React + Vite
+# Time-Time
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-
-# Time-Time Project
-
-This project is a single-page application built with React and Vite. It provides a minimal setup to get React working in Vite with Hot Module Replacement (HMR) and some ESLint rules. The application includes a simple timer component and demonstrates the use of React hooks and components.
+Time-Time is a productivity application that helps users manage their time effectively. It includes features such as a timer, notifications, achievements, streak tracking, and customizable settings.
 
 ## Features
 
-- **React with Vite**: Utilizes Vite for fast development and build processes.
-- **Hot Module Replacement (HMR)**: Allows for real-time updates without refreshing the entire page.
-- **ESLint Integration**: Ensures code quality and consistency with predefined rules.
-- **Timer Component**: A simple React component to display time.
+- **Timer**: A focus timer that helps users manage their work sessions.
+- **Notifications**: Real-time notifications to keep users informed about their timer status and achievements.
+- **Achievements**: Unlock achievements based on specific actions, such as starting the timer for the first time, resetting the timer within a certain time frame, and reaching time milestones.
+- **Streak Tracking**: Track consecutive days of using the application and display the current streak.
+- **Customizable Settings**: Change the theme color of the application.
+- **Navigation Bar**: Navigate between different sections of the application using the navigation bar.
 
-## Getting Started
+## Installation
 
-To get started with this project, follow the steps below:
-
-### Prerequisites
-
-- Node.js and npm installed on your machine.
-
-### Installation
-
-1. **Clone the repository**:
+1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd Time-Time
+   git clone https://github.com/your-username/time-time.git
 
-2. npm install
+2. Navigate to the project directory:
 
-npm run dev
+cd time-time
 
-npm run build
+3. Install the dependencies:
 
-npm run preview
+npm install
 
-npm run lint
+4. Start the development server:
 
-Project Structure
-public: Contains static assets.
-src: Main application code, including:
-App.jsx and App.tsx: Main application components.
-index.css: Global styles.
-main.jsx and main.tsx: Entry points for the application.
-components: Contains individual UI components.
-timer: Contains the Timer component.
+npm start
 
+Usage
+Open the application in your browser:
 
-Plugins
-This project uses two official Vite plugins for React:
-@vitejs/plugin-react: Uses Babel for Fast Refresh.
-@vitejs/plugin-react-swc: Uses SWC for Fast Refresh.
+http://localhost:3000
 
+Use the navigation bar to switch between the timer and settings pages.
 
-Make sure to replace `<repository-url>` with the actual URL of your repository. This `README.md` provides a comprehensive overview of your project, including setup instructions, features, and project structure. Adjust any sections as needed to better fit your project's specifics.
+Start the timer to begin a focus session. You will receive notifications about the timer status and unlock achievements based on your actions.
+
+Customize the theme color in the settings page.
+
+Components
+TimerDisplay
+The TimerDisplay component is responsible for displaying the timer and handling timer-related actions such as start, stop, and reset. It also displays the current streak and achievements.
+
+Settings
+The Settings component allows users to customize the theme color of the application. It includes a navigation bar for easy navigation between different sections.
+
+Notifications
+The Notifications component displays real-time notifications to keep users informed about their timer status and achievements.
+
+Navbar
+The Navbar component provides navigation links to different sections of the application, such as the home page and settings page.
+
+Toast
+The Toast component displays toast notifications with different types (success, warning, info, error) and automatically removes them after a certain time.
+
+TimerControls
+The TimerControls component provides start and stop buttons for the timer.
+
+Timer
+The Timer component is a simple display component that renders the current time.
+
+Hooks
+useAnalytics
+The useAnalytics hook tracks user actions, manages achievements, and provides notifications.
+
+useDarkMode
+The useDarkMode hook determines if dark mode is enabled.
+
+useNotifications
+The useNotifications hook provides access to the notification context, allowing components to add and remove notifications.
+
+Context
+NotificationProvider
+The NotificationProvider component provides the notification context to its children, allowing them to access and manage notifications.
+
+Common
+achievements
+The achievements module defines a list of achievements with their criteria. Each achievement has an id, description, and a criteria function that determines if the achievement is unlocked based on user actions.
+
+streaks
+The streaks module handles streak tracking by checking the last visit date, updating the streak count if necessary, and saving the updated information to local storage.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
+

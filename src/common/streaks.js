@@ -1,4 +1,7 @@
-// this will handle the streaks thats being tracked
+/**
+ * Function to handle streaks.
+ * Checks the last visit date, updates the streak count if necessary, and saves the updated information to local storage.
+ */
 
 export const handleStreaks = () => {
     const today = new Date().toISOString().split('T')[0];

@@ -5,7 +5,7 @@ import styles from '../settings/Settings.module.css';
 
 const Settings = ({ onThemeChange }) => {
     const [themeColor, setThemeColor] = useState('#ffffff');
-
+     // this handle theme color change
     const handleThemeColorChange = (e) => {
         setThemeColor(e.target.value);
         onThemeChange(e.target.value);
@@ -13,7 +13,7 @@ const Settings = ({ onThemeChange }) => {
 
     return (
         <div>
-            <Navbar />
+            <Navbar /> {/* Include the Navbar component */}
             <div className={styles.settings}>
                 <h2>Settings</h2>
                 <div className={styles.settingItem}>

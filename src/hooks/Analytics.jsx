@@ -9,7 +9,7 @@ const useAnalytics = () => {
     startCount: 0,
     totalTime: 0,
     resetUnderThreeMinutes: false,
-  });
+  });// State to keep track of user actions
   const [unlockedAchievements, setUnlockedAchievements] = useState(() => {
     // Retrieve achievements from local storage
     const savedAchievements = localStorage.getItem("unlockedAchievements");
@@ -47,6 +47,10 @@ const useAnalytics = () => {
     }, session.duration);
   };
 
+  /**
+   * Function to track a reset action.
+   * @param {number} time - The time at which the reset action occurred.
+   */
   const trackReset = (time) => {
     setActions((prevActions) => ({
       ...prevActions,
@@ -56,6 +60,9 @@ const useAnalytics = () => {
     checkAchievements();
   };
 
+  /**
+   * Function to check and unlock achievements based on user actions.
+   */
   const checkAchievements = () => {
     achievements.forEach((achievement) => {
       if (achievement.criteria(actions) && !unlockedAchievements.includes(achievement.id)) {

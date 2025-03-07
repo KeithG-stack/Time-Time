@@ -2,6 +2,10 @@ import React from 'react';
 import { useNotifications } from '../settings/settingsContext';
 import styles from './Notifications.module.css';
 
+/**
+ * Notifications component to display notifications.
+ * Uses the useNotifications hook to get notifications and remove them.
+ */
 const Notifications = () => {
     const { notifications, removeNotification } = useNotifications();
 
