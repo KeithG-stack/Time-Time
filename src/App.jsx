@@ -9,9 +9,20 @@ import './App.css';
 
 function App() {
     const [themeColor, setThemeColor] = useState('#ffffff');
+    const [sessions, setSessions] = useState(() => {
+        // Retrieve sessions from local storage
+        const savedSessions = localStorage.getItem("completedSessions");
+        return savedSessions ? JSON.parse(savedSessions) : [];
+    });
 
     const handleThemeChange = (color) => {
         setThemeColor(color);
+    };
+
+    const addSession = (session) => {
+        const updatedSessions = [...sessions, session];
+        setSessions(updatedSessions);
+        localStorage.setItem("completedSessions", JSON.stringify(updatedSessions));
     };
 
     useEffect(() => {
@@ -24,8 +35,8 @@ function App() {
                 <div>
                     <Navbar /> {/* Include the Navbar component */}
                     <Routes>
-                        <Route path="/" element={<TimerDisplay title="Focus Timer" />} />
-                        <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} />} />
+                        <Route path="/" element={<TimerDisplay title="Focus Timer" addSession={addSession} />} />
+                        <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} sessions={sessions} />} />
                     </Routes>
                     <Notifications />
                 </div>

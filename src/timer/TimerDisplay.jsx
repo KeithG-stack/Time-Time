@@ -8,21 +8,21 @@ import { useNotifications } from '../settings/settingsContext'; // Import useNot
 import useAnalytics from '../hooks/Analytics'; // Import useAnalytics hook
 import { achievements } from '../common/achievements'; // Import achievements array
 import { handleStreaks } from '../common/streaks';
-const TimerDisplay = ({ title }) => {
-    // State to keep track of the time
-    const [time, setTime] = useState(25 * 60);
-    // State to keep track of whether the timer is running
-    const [isRunning, setIsRunning] = useState(false);
+const TimerDisplay = ({ title, addSession }) => {
+    const [time, setTime] = useState(25 * 60); // State to keep track of the time
+    const [isRunning, setIsRunning] = useState(false);  // State to keep track of whether the timer is running
     // want to keep track of custom time input
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(25);
     const [seconds, setSeconds] = useState(0);
-    const [streak, setStreak] = useState(0);
+    const [streak, setStreak] = useState(0); // State to keep track of the streak
+    // this is for the the timer to break
+    const [isOnBreak, setIsOnBreak] = useState(false);
+    const [breakTime, setBreakTime] = useState(0);
     // Custom hook to determine if dark mode is enabled
     const isDarkMode = useDarkMode();
     // Custom hook to access the notification context
     const { addNotification } = useNotifications(); 
-    
     const { trackSession, trackReset, unlockedAchievements } = useAnalytics(); // Get the trackSession and trackReset functions from the useAnalytics hook
 
     useEffect(() => {
@@ -32,7 +32,7 @@ const TimerDisplay = ({ title }) => {
     }, []);
     useEffect(() => {
         let interval;
-        if (isRunning) {
+        if (isRunning && !isOnBreak) {
             // If the timer is running, set an interval to update the time every second
             interval = setInterval(() => {
                 setTime(prevTime => {
@@ -40,9 +40,21 @@ const TimerDisplay = ({ title }) => {
                         playsound();
                         setIsRunning(false);
                         clearInterval(interval);
+                        handleSessionComplete();
                         return 0;
                     }
                     return prevTime - 1;
+                });
+            }, 1000);
+        } else if (isOnBreak) {
+            interval = setInterval(() => {
+                setBreakTime(prevBreakTime => {
+                    if (prevBreakTime <= 1) {
+                        setIsOnBreak(false);
+                        clearInterval(interval);
+                        return 0;
+                    }
+                    return prevBreakTime - 1;
                 });
             }, 1000);
         } else if (!isRunning && time !== 0) {
@@ -51,7 +63,7 @@ const TimerDisplay = ({ title }) => {
         }
         // Cleanup function to clear the interval when the component unmounts or dependencies change
         return () => clearInterval(interval);
-    }, [isRunning, time]);
+    }, [isRunning, isOnBreak, time, breakTime]);
 
     // Function to handle the start of the timer
     const handleStart = () => {
@@ -73,6 +85,21 @@ const TimerDisplay = ({ title }) => {
         setTime(totalSeconds);
         setIsRunning(false);
         addNotification({ message: "Timer reset", type: "info" });
+    };
+
+    const handleBreak = (breakDuration) => {
+        setIsOnBreak(true);
+        setBreakTime(breakDuration);
+        addNotification({ message: `Break started for ${breakDuration / 60} minutes`, type: "info" });
+    };
+
+    const handleSessionComplete = () => {
+        const newSession = {
+            id: Date.now(),
+            startTime: new Date().toISOString(),
+        };
+        addSession(newSession);
+        addNotification({ message: "Session Completed!", type: "Success"});
     };
 
     // want this to handle the custom time change
@@ -139,6 +166,8 @@ const TimerDisplay = ({ title }) => {
             <p className={styles.time}>{new Date(time * 1000).toISOString().substr(11, 8)}</p>
             <StartStopButton isRunning={isRunning} onStart={handleStart} onStop={handleStop} /> {/* Display the StartStopButton component */}
             <ResetButton onReset={handleReset} /> {/* Display the ResetButton component */}
+            <button onClick={() => handleBreak(5 * 60)} className={styles.breakButton}>Take a 5-minute break</button>
+            <button onClick={() => handleBreak(10 * 60)} className={styles.breakButton}>Take a 10-minute break</button>
              <button onClick={scrollToAchievements} className={styles.achievementsButton}>Achievements</button>
             <div id="achievements" className={styles.achievements}>
                 <h2>Achievements</h2>
@@ -148,7 +177,7 @@ const TimerDisplay = ({ title }) => {
                         return <li key={achievementId}>{achievement.description}</li>;
                     })}
                </ul>
-            </div>   
+            </div>            
         </div>
     );
 };

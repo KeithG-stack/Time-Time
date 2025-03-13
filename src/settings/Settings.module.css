@@ -8,6 +8,7 @@
     background-color: #f0f0f0; /* Background color */
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
 }
 
 .settingItem {
@@ -16,4 +17,37 @@
 
 .settingItem label {
     margin-right: 10px;
+}
+
+.settingItem input {
+    margin-right: 10px;
+}
+
+.settingItem button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.sessions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sessions h2 {
+    margin-top: 0;
+}
+
+.sessions ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sessions li {
+    margin-bottom: 5px;
 }

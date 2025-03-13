@@ -56,12 +56,10 @@ const ToastManager = () => {
           message={message} 
           type={type} 
           remove={removeNotification} />
-        )
-      )}
+      ))}
 
     </div>
   );
 };
-
 
 export default ToastManager;
