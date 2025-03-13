@@ -1,33 +1,59 @@
-.notifications {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 300px;
-    z-index: 1000;
+.settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw; /* Full width of the viewport */
+    background-color: #f0f0f0; /* Background color */
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
 }
 
-.notification {
+.settingItem {
+    margin-bottom: 20px;
+}
+
+.settingItem label {
+    margin-right: 10px;
+}
+
+.settingItem input {
+    margin-right: 10px;
+}
+
+.settingItem button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.sessions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
     padding: 10px;
-    margin-bottom: 10px;
+    border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.notification.info {
-    border-color: #007bff;
+.sessions h2 {
+    margin-top: 0;
 }
 
-.notification.success {
-    border-color: #28a745;
+.sessions ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-.notification button {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: 10px;
+.sessions li {
+    margin-bottom: 5px;
+}
+
+.chart {
+    width: 80%;
+    max-width: 800px;
+    margin-top: 20px;
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../settings/Settings.module.css';
 import { useNotifications} from '../settings/settingsContext';
+import CompletedSessionsChart from './CompleteSessionsChart'; // Import CompletedSessionsChart component
 
 
 const Settings = ({ onThemeChange, sessions }) => {
@@ -66,6 +67,9 @@ const Settings = ({ onThemeChange, sessions }) => {
                         </li>
                     ))}
                 </ul>
+            </div>
+            <div className={styles.chart}>
+                <CompletedSessionsChart sessions={sessions} />
             </div>
         </div>
     );

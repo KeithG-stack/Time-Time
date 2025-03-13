@@ -14,17 +14,18 @@ function App() {
         const savedSessions = localStorage.getItem("completedSessions");
         return savedSessions ? JSON.parse(savedSessions) : [];
     });
+    const [isTimerRunning, setIsTimerRunning] = useState(false);
 
     const handleThemeChange = (color) => {
         setThemeColor(color);
     };
-
+    
     const addSession = (session) => {
         const updatedSessions = [...sessions, session];
         setSessions(updatedSessions);
         localStorage.setItem("completedSessions", JSON.stringify(updatedSessions));
     };
-
+    
     useEffect(() => {
         document.body.style.backgroundColor = themeColor;
     }, [themeColor]);
@@ -35,8 +36,8 @@ function App() {
                 <div>
                     <Navbar /> {/* Include the Navbar component */}
                     <Routes>
-                        <Route path="/" element={<TimerDisplay title="Focus Timer" addSession={addSession} />} />
-                        <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} sessions={sessions} />} />
+                        <Route path="/" element={<TimerDisplay title="Focus Timer" addSession={addSession} setIsTimerRunning={setIsTimerRunning} />} />
+                        {!isTimerRunning && <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} sessions={sessions} />} />}
                     </Routes>
                     <Notifications />
                 </div>

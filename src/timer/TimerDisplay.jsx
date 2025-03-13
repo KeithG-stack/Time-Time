@@ -8,7 +8,8 @@ import { useNotifications } from '../settings/settingsContext'; // Import useNot
 import useAnalytics from '../hooks/Analytics'; // Import useAnalytics hook
 import { achievements } from '../common/achievements'; // Import achievements array
 import { handleStreaks } from '../common/streaks';
-const TimerDisplay = ({ title, addSession }) => {
+
+const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
     const [time, setTime] = useState(25 * 60); // State to keep track of the time
     const [isRunning, setIsRunning] = useState(false);  // State to keep track of whether the timer is running
     // want to keep track of custom time input
@@ -19,9 +20,7 @@ const TimerDisplay = ({ title, addSession }) => {
     // this is for the the timer to break
     const [isOnBreak, setIsOnBreak] = useState(false);
     const [breakTime, setBreakTime] = useState(0);
-    // Custom hook to determine if dark mode is enabled
     const isDarkMode = useDarkMode();
-    // Custom hook to access the notification context
     const { addNotification } = useNotifications(); 
     const { trackSession, trackReset, unlockedAchievements } = useAnalytics(); // Get the trackSession and trackReset functions from the useAnalytics hook
 
@@ -30,6 +29,7 @@ const TimerDisplay = ({ title, addSession }) => {
         const currentStreak = handleStreaks();
         setStreak(currentStreak);
     }, []);
+
     useEffect(() => {
         let interval;
         if (isRunning && !isOnBreak) {
@@ -39,6 +39,7 @@ const TimerDisplay = ({ title, addSession }) => {
                     if (prevTime <= 1) {
                         playsound();
                         setIsRunning(false);
+                        setIsTimerRunning(false); // Update the state to indicate the timer is not running
                         clearInterval(interval);
                         handleSessionComplete();
                         return 0;
@@ -68,6 +69,7 @@ const TimerDisplay = ({ title, addSession }) => {
     // Function to handle the start of the timer
     const handleStart = () => {
         setIsRunning(true);
+        setIsTimerRunning(true); // Update the state to indicate the timer is running
         addNotification({ message: "Timer started", type: "info" });
         trackSession ({ id: Date.now(), duration: time * 1000, });
     };
@@ -75,15 +77,17 @@ const TimerDisplay = ({ title, addSession }) => {
     // Function to handle the stop of the timer
     const handleStop = () => {
         setIsRunning(false);
+        setIsTimerRunning(false); // Update the state to indicate the timer is not running
         addNotification({ message: "Timer stopped", type: "info" });
     };
 
     // Function to handle the reset of the timer
     const handleReset = () => {
-        const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + parseInt(seconds);
+        const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
         trackReset(time);
         setTime(totalSeconds);
         setIsRunning(false);
+        setIsTimerRunning(false); // Update the state to indicate the timer is not running
         addNotification({ message: "Timer reset", type: "info" });
     };
 
@@ -99,7 +103,7 @@ const TimerDisplay = ({ title, addSession }) => {
             startTime: new Date().toISOString(),
         };
         addSession(newSession);
-        addNotification({ message: "Session Completed!", type: "Success"});
+        addNotification({ message: "Session Completed!", type: "success" });
     };
 
     // want this to handle the custom time change
