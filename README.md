@@ -4,12 +4,71 @@ Time-Time is a productivity application that helps users manage their time effec
 
 ## Features
 
-- **Timer**: A focus timer that helps users manage their work sessions.
-- **Notifications**: Real-time notifications to keep users informed about their timer status and achievements.
-- **Achievements**: Unlock achievements based on specific actions, such as starting the timer for the first time, resetting the timer within a certain time frame, and reaching time milestones.
-- **Streak Tracking**: Track consecutive days of using the application and display the current streak.
-- **Customizable Settings**: Change the theme color of the application.
-- **Navigation Bar**: Navigate between different sections of the application using the navigation bar.
+1. Timer
+A customizable timer to help users focus on tasks.
+Options to set custom hours, minutes, and seconds.
+Start, pause, and reset functionality.
+Sound notifications when the timer ends, with the ability to toggle sound on/off and select custom audio.
+2. Motivational Quotes
+Displays a random motivational quote when the timer starts.
+Quotes are updated dynamically to keep users inspired.
+Option to periodically change quotes during the session.
+3. Achievements and Ranking System
+Unlock achievements based on total minutes completed.
+Titles and rewards include:
+Focus Master: Bronze, Silver, and Gold badges.
+Streak Champion: Bronze, Silver, and Gold trophies.
+Consistency King: Daily Tracker, Weekly Insights, and Monthly Report.
+Achievements are displayed with smooth unlock animations.
+4. Session Tracking
+Tracks completed sessions and total minutes.
+Displays progress visually using a progress bar.
+Notifications for milestones (e.g., "5 sessions completed!").
+5. Chart Stats
+A dedicated page to visualize completed sessions.
+View session data in daily, weekly, or monthly charts.
+Interactive buttons to toggle between different views.
+6. Ranking System Page
+A separate page to display all available achievements and their requirements.
+Users can view their progress and unlocked titles.
+7. Dynamic Backgrounds
+Background changes dynamically based on the timer's progress.
+Smooth transitions between colors to enhance the user experience.
+8. Break Timer
+Option to take short or long breaks after completing a session.
+Tracks break time separately from focus sessions.
+
+
+Pages
+1. Home Page
+Displays the timer and motivational quotes.
+Shows the user's current unlocked title in the top-left corner.
+Includes buttons to start, pause, and reset the timer.
+2. Settings Page
+Allows users to customize the theme color.
+Option to plan future sessions with a date and time picker.
+Displays a list of completed sessions.
+3. Chart Stats Page
+Visualizes session data using interactive charts.
+Users can toggle between daily, weekly, and monthly views.
+4. Ranking System Page
+Displays all available achievements and their requirements.
+Shows the user's progress toward unlocking new titles and rewards.
+
+
+Technologies Used
+React: Frontend framework for building the user interface.
+React Router: For navigation between pages.
+Chart.js: For visualizing session data in charts.
+Framer Motion: For smooth animations and transitions.
+CSS Modules: For styling components with scoped CSS.
+
+Future Enhancements
+Add user authentication to save progress across devices.
+Implement a leaderboard to compare progress with other users.
+Allow users to add custom motivational quotes.
+Add dark mode for better accessibility.
+
 
 ## Installation
 
@@ -85,4 +144,8 @@ The streaks module handles streak tracking by checking the last visit date, upda
 
 License
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+Contributing
+
+Contributions are welcome! If you'd like to contribute, please fork the repository and submit a pull request.
 
