@@ -1,0 +1,23 @@
+.container {
+    padding: 20px;
+    text-align: center;
+}
+
+.achievement {
+    margin-bottom: 20px;
+}
+
+.achievement h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.achievement ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.achievement li {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}

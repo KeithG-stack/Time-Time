@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../settings/Settings.module.css';
 import { useNotifications} from '../settings/settingsContext';
-import CompletedSessionsChart from './CompleteSessionsChart'; // Import CompletedSessionsChart component
+
 
 
 const Settings = ({ onThemeChange, sessions }) => {
@@ -57,19 +57,6 @@ const Settings = ({ onThemeChange, sessions }) => {
                     onChange={handleSessionTimeChange}
                 />
                 <button onClick={handlePlanSession}>Plan Session</button>
-            </div>
-            <div className={styles.sessions}>
-                <h2>Completed Sessions</h2>
-                <ul>
-                    {sessions.map((session) => (
-                        <li key={session.id}>
-                            Session completed on {new Date(session.startTime).toLocaleString()}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            <div className={styles.chart}>
-                <CompletedSessionsChart sessions={sessions} />
             </div>
         </div>
     );
