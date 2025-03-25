@@ -1,6 +1,14 @@
 .navbar {
     background-color: #333;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    position: fixed; /* Ensure the navbar stays at the top */
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it appears above other elements */
 }
 
 .navbar ul {
@@ -8,20 +16,32 @@
     margin: 0;
     padding: 0;
     display: flex;
+    gap: 20px; /* Add spacing between links */
 }
 
 .navbar li {
-    float: left;
+    display: inline;
 }
 
 .navbar li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 10px 20px;
     text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 5px;
 }
 
 .navbar li a:hover {
-    background-color: #111;
+    background-color: #555;
+    transform: scale(1.05); /* Add a slight zoom effect */
+}
+
+.navbar li a.active {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
 }

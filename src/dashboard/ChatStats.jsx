@@ -1,41 +1,49 @@
-import React, { useState } from 'react';
-import CompletedSessionsChart from '../dashboard/CompleteSessionsChart'; // Import the chart component
-import styles from './ChatStats.module.css'; // Import the CSS module
+import React, { useState } from "react";
+import CompletedSessionsChart from "../dashboard/CompleteSessionsChart";
+import Navbar from "../settings/Navbar"; // Import the Navbar component
+import styles from "../settings/PageLayout.module.css"; // Import shared layout styles
+import chartStyles from "./ChatStats.module.css"; // Import chart-specific styles
 
 const ChartStats = ({ sessions }) => {
-    const [view, setView] = useState('daily'); // State to track the selected view
+    const [view, setView] = useState("daily");
 
     return (
-        <div className={styles.container}>
-            <h1 className={styles.title}>Chart Stats</h1>
-            <p className={styles.description}>Track your completed sessions over time.</p>
+        <>
+            <Navbar /> {/* Include the Navbar */}
+            <div className={styles.pageContainer}>
+                <div className={styles.pageContent}>
+                    <h1 className={styles.pageTitle}>Chart Stats</h1>
+                    <p>Track your completed sessions over time.</p>
 
-            {/* Buttons to toggle views */}
-            <div className={styles.viewButtons}>
-                <button
-                    className={`${styles.button} ${view === 'daily' ? styles.active : ''}`}
-                    onClick={() => setView('daily')}
-                >
-                    Daily
-                </button>
-                <button
-                    className={`${styles.button} ${view === 'weekly' ? styles.active : ''}`}
-                    onClick={() => setView('weekly')}
-                >
-                    Weekly
-                </button>
-                <button
-                    className={`${styles.button} ${view === 'monthly' ? styles.active : ''}`}
-                    onClick={() => setView('monthly')}
-                >
-                    Monthly
-                </button>
-            </div>
+                    {/* Buttons to toggle views */}
+                    <div className={chartStyles.viewButtons}>
+                        <button
+                            className={`${chartStyles.button} ${view === "daily" ? chartStyles.active : ""}`}
+                            onClick={() => setView("daily")}
+                        >
+                            Daily
+                        </button>
+                        <button
+                            className={`${chartStyles.button} ${view === "weekly" ? chartStyles.active : ""}`}
+                            onClick={() => setView("weekly")}
+                        >
+                            Weekly
+                        </button>
+                        <button
+                            className={`${chartStyles.button} ${view === "monthly" ? chartStyles.active : ""}`}
+                            onClick={() => setView("monthly")}
+                        >
+                            Monthly
+                        </button>
+                    </div>
 
-            <div className={styles.chartWrapper}>
-                <CompletedSessionsChart sessions={sessions} view={view} />
+                    {/* Chart */}
+                    <div className={chartStyles.chartWrapper}>
+                        <CompletedSessionsChart sessions={sessions} view={view} />
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

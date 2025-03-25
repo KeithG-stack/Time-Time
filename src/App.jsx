@@ -38,16 +38,12 @@ function App() {
                 <div>
                     <Navbar />
                     <Routes>
-                        <Route
-                            path="/"
-                            element={<TimerDisplay title="Focus Timer" addSession={addSession} setIsTimerRunning={setIsTimerRunning} />}
-                        />
-                        {!isTimerRunning && (
-                            <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} sessions={sessions} />} />
-                        )}
-                        <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} /> {/* Add Chart Stats route */}
-                        
-                        <Route path="/ranking-system" element={<RankingSystem />} /> {/* Add route */}
+                        <Route>
+                             <Route path="/" element={<TimerDisplay title="Focus Timer" />} />
+                             <Route path="/settings" element={<Settings />} />
+                             <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} /> {/* Ensure this route is defined */}
+                             <Route path="/ranking-system" element={<RankingSystem />} />
+                            </Route>
                     </Routes>
                     <Notifications />
                 </div>

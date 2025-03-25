@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom"; // Use NavLink for active link styling
 import styles from "./Navbar.module.css";
 
 const Navbar = () => {
@@ -7,16 +7,36 @@ const Navbar = () => {
         <nav className={styles.navbar}>
             <ul>
                 <li>
-                    <Link to="/">Home</Link>
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) => (isActive ? styles.active : "")}
+                    >
+                        Home
+                    </NavLink>
                 </li>
                 <li>
-                    <Link to="/settings">Settings</Link>
+                    <NavLink
+                        to="/settings"
+                        className={({ isActive }) => (isActive ? styles.active : "")}
+                    >
+                        Settings
+                    </NavLink>
                 </li>
                 <li>
-                    <Link to="/chart-stats">Chart Stats</Link> {/* Add link */}
+                    <NavLink
+                        to="/chart-stats"
+                        className={({ isActive }) => (isActive ? styles.active : "")}
+                    >
+                        Chart Stats
+                    </NavLink>
                 </li>
                 <li>
-                    <Link to="/ranking-system">Ranking System</Link> {/* Add link */}
+                    <NavLink
+                        to="/ranking-system"
+                        className={({ isActive }) => (isActive ? styles.active : "")}
+                    >
+                        Ranking System
+                    </NavLink>
                 </li>
             </ul>
         </nav>
