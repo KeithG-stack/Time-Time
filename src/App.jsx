@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import TimerDisplay from './timer/TimerDisplay.jsx'; // Import TimerDisplay component
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import BrowserRouter, Route, and Routes components
-import Settings from './settings/Settings.jsx'; // Import Settings component
-import Notifications from './settings/Notifications.jsx'; // Import Notifications component
-import ChartStats from './dashboard/ChatStats.jsx'; // Import ChartStats component
-import Navbar from './settings/Navbar.jsx'; // Import Navbar component
+import TimerDisplay from './timer/TimerDisplay.jsx';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Settings from './settings/Settings.jsx';
+import ChartStats from './dashboard/ChatStats.jsx';
+import Navbar from './settings/Navbar.jsx';
 import RankingSystem from "./RankingTittle/RankingSystem.jsx";
-import { NotificationProvider } from './settings/settingsContext'; // Import NotificationProvider
+import { NotificationProvider } from './settings/settingsContext';
+import NotificationDisplay from './settings/NotificationDisplay';
 import './App.css';
 
 function App() {
     const [themeColor, setThemeColor] = useState('#ffffff');
     const [sessions, setSessions] = useState(() => {
-        // Retrieve sessions from local storage
         const savedSessions = localStorage.getItem("completedSessions");
         return savedSessions ? JSON.parse(savedSessions) : [];
     });
@@ -36,16 +35,13 @@ function App() {
         <NotificationProvider>
             <Router>
                 <div>
-                    <Navbar />
                     <Routes>
-                        <Route>
-                             <Route path="/" element={<TimerDisplay title="Focus Timer" />} />
-                             <Route path="/settings" element={<Settings />} />
-                             <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} /> {/* Ensure this route is defined */}
-                             <Route path="/ranking-system" element={<RankingSystem />} />
-                            </Route>
+                        <Route path="/" element={<TimerDisplay title="Focus Timer" addSession={addSession} setIsTimerRunning={setIsTimerRunning} />} />
+                        <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} />} />
+                        <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} />
+                        <Route path="/ranking-system" element={<RankingSystem />} />
                     </Routes>
-                    <Notifications />
+                    <NotificationDisplay />
                 </div>
             </Router>
         </NotificationProvider>

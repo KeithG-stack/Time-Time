@@ -177,7 +177,6 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
         addNotification({ message: "Timer reset", type: "info" });
     };
 
-
     // Function to handle custom time input changes
     const handleHoursChange = (e) => {
         setHours(parseInt(e.target.value, 10) || 0);
@@ -200,15 +199,14 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
         document.getElementById('achievements').scrollIntoView({ behavior: 'smooth' });
     };
 
-    return (   
+    return (
         <>
-            <Navbar /> {/* Include the Navbar component */}
+            <Navbar />
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>{title}</h1>
-                    <p>Current Streak: {streak} days</p>
+                    <p className={timerStyles.streakText}>Current Streak: {streak} days</p>
 
-                    {/* Timer-specific content */}
                     <div className={timerStyles.timeInputs}>
                         <input
                             type="number"
@@ -216,33 +214,37 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
                             onChange={handleHoursChange}
                             min="0"
                             placeholder="Hours"
-                            className={timerStyles.customTimeInput} />
+                            className={timerStyles.customTimeInput}
+                        />
                         <input
                             type="number"
                             value={minutes}
                             onChange={handleMinutesChange}
                             min="0"
                             placeholder="Minutes"
-                            className={timerStyles.customTimeInput} />
+                            className={timerStyles.customTimeInput}
+                        />
                         <input
                             type="number"
                             value={seconds}
                             onChange={handleSecondsChange}
                             min="0"
                             placeholder="Seconds"
-                            className={timerStyles.customTimeInput} />
+                            className={timerStyles.customTimeInput}
+                        />
                     </div>
-                </div>
-            </div>
-            <div>
-                <div>
-                    {/* Audio Settings */}
-                    <div className={styles.audioSettings}>
+
+                    <div className={timerStyles.time}>
+                        {new Date(time * 1000).toISOString().substr(11, 8)}
+                    </div>
+
+                    <div className={timerStyles.audioSettings}>
                         <label>
                             <input
                                 type="checkbox"
                                 checked={isSoundEnabled}
-                                onChange={() => setIsSoundEnabled(!isSoundEnabled)} />
+                                onChange={() => setIsSoundEnabled(!isSoundEnabled)}
+                            />
                             Enable Sound
                         </label>
                         <label>
@@ -258,23 +260,23 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
                         </label>
                     </div>
 
-                    {/* Progress Bar */}
-                    <div className={styles.progressBarContainer}>
-                        <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
+                    <div className={timerStyles.progressBarContainer}>
+                        <div 
+                            className={timerStyles.progressBar}
+                            style={{ width: `${progress}%` }}
+                        />
                     </div>
 
-                    {/* Display the timer value in MM:SS format */}
-                    <p className={styles.time}>{new Date(time * 1000).toISOString().substr(11, 8)}</p>
+                    <div className={timerStyles.controls}>
+                        <button onClick={handleStart} disabled={isRunning}>Start</button>
+                        <button onClick={handleStop} disabled={!isRunning}>Stop</button>
+                        <button onClick={handleReset}>Reset</button>
+                        <button onClick={scrollToAchievements} className={timerStyles.achievementsButton}>
+                            Achievements
+                        </button>
+                    </div>
 
-                    {/* Buttons for Start/Stop, Reset, and Breaks */}
-                    <button onClick={handleStart} disabled={isRunning}>Start</button>
-                    <button onClick={handleStop} disabled={!isRunning}>Stop</button>
-                    <button onClick={handleReset}>Reset</button>
-                    {/* Button to scroll to achievements */}
-                    <button onClick={scrollToAchievements} className={styles.achievementsButton}>Achievements</button>
-
-                    {/* Achievements Section */}
-                    <div id="achievements" className={styles.achievements}>
+                    <div id="achievements" className={timerStyles.achievements}>
                         <h2>Achievements</h2>
                         <ul>
                             {unlockedAchievements.map((achievementId) => {
@@ -284,9 +286,8 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
                         </ul>
                     </div>
 
-                    {/* Unlock Animation */}
                     {showUnlockAnimation && (
-                        <div className={styles.unlockedTitle}>
+                        <div className={timerStyles.unlockedTitle}>
                             {unlockedTitle && <p>{unlockedTitle}</p>}
                         </div>
                     )}
