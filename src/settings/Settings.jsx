@@ -4,6 +4,11 @@ import { useNotifications } from '../settings/settingsContext';
 import Navbar from "../settings/Navbar"; // Import the Navbar component
 
 const Settings = ({ onThemeChange }) => {
+    const [breakTime, setBreakTime] = useState(0);
+    const handleBreak = (breakDuration) => {
+        setBreakTime(breakDuration);
+        alert(`Break started for ${breakDuration / 60} minutes`);
+    };
     const [themeColor, setThemeColor] = useState('#ffffff');
     // this is to hold the planned session 
     const [sessionTime, setSessionTime] = useState(''); 
@@ -59,7 +64,13 @@ const Settings = ({ onThemeChange }) => {
                     <button onClick={handlePlanSession}>Plan Session</button>
                 </div>
             </div>
+            <div className={styles.settingItem}>
+                <button onClick={() => handleBreak(5 * 60)}>5 min Break</button>
+                <button onClick={() => handleBreak(10 * 60)}>10 min Break</button>
+                <button onClick={() => handleBreak(15 * 60)}>15 min Break</button>
+            </div>
         </>
+
     );
 };
 

@@ -45,7 +45,6 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
     const [totalMinutes, setTotalMinutes] = useState(0);
 
     // Custom hooks for dark mode, notifications, and analytics
-    const isDarkMode = useDarkMode();
     const { addNotification } = useNotifications();
     const { trackSession, trackReset, unlockedAchievements } = useAnalytics();
 
@@ -178,13 +177,6 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
         addNotification({ message: "Timer reset", type: "info" });
     };
 
-    // Function to handle break time
-    const handleBreak = (breakDuration) => {
-        setIsRunning(false); // Stop the main timer
-        setIsOnBreak(true);
-        setBreakTime(breakDuration);
-        addNotification({ message: `Break started for ${breakDuration / 60} minutes`, type: "info" });
-    };
 
     // Function to handle custom time input changes
     const handleHoursChange = (e) => {
@@ -278,9 +270,6 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
                     <button onClick={handleStart} disabled={isRunning}>Start</button>
                     <button onClick={handleStop} disabled={!isRunning}>Stop</button>
                     <button onClick={handleReset}>Reset</button>
-                    <button onClick={() => handleBreak(5 * 60)} className={styles.breakButton}>Take a 5-minute break</button>
-                    <button onClick={() => handleBreak(10 * 60)} className={styles.breakButton}>Take a 10-minute break</button>
-
                     {/* Button to scroll to achievements */}
                     <button onClick={scrollToAchievements} className={styles.achievementsButton}>Achievements</button>
 
