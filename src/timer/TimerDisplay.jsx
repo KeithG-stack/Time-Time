@@ -3,9 +3,7 @@ import styles from '../settings/PageLayout.module.css';
 import timerStyles from './TimerDisplay.module.css'; 
 import { useNotifications } from '../settings/settingsContext'; 
 import useAnalytics from '../hooks/Analytics'; 
-import { achievements } from '../achievements/achievements'; 
 import { handleStreaks } from '../common/streaks'; 
-import { achievementTypes } from "../RankingTittle/Rank"; 
 import Navbar from "../settings/Navbar"; 
 
 const TimerDisplay = ({ title, addSession }) => {
@@ -15,8 +13,6 @@ const TimerDisplay = ({ title, addSession }) => {
     const [minutes, setMinutes] = useState(25); 
     const [seconds, setSeconds] = useState(0); 
     const [streak, setStreak] = useState(0); 
-    const [unlockedTitle, setUnlockedTitle] = useState(""); 
-    const [showUnlockAnimation, setShowUnlockAnimation] = useState(false); 
     const [motivationalQuote, setMotivationalQuote] = useState(""); 
     const [isOnBreak, setIsOnBreak] = useState(false); 
     const [breakTime, setBreakTime] = useState(0); 
@@ -25,7 +21,7 @@ const TimerDisplay = ({ title, addSession }) => {
     const [totalMinutes, setTotalMinutes] = useState(0); 
 
     const { addNotification } = useNotifications(); 
-    const { trackSession, trackReset, unlockedAchievements } = useAnalytics(); 
+    const { trackSession, trackReset } = useAnalytics(); 
 
     const motivationalQuotes = useMemo(() => [
         "The secret of getting ahead is getting started.",
@@ -38,135 +34,92 @@ const TimerDisplay = ({ title, addSession }) => {
         "Small steps every day lead to big achievements."
     ], []); 
 
-    // Function to check and unlock achievements
-    const checkAchievements = useCallback(() => {
-        for (const type in achievementTypes) {
-            const { title, tiers } = achievementTypes[type];
-            for (const tier of tiers) {
-                if (totalMinutes >= tier.requirement) {
-                    setUnlockedTitle(`${title} - ${tier.reward}`);
-                    setShowUnlockAnimation(true);
-                    setTimeout(() => setShowUnlockAnimation(false), 2000);
-                }
-            }
-        }
-    }, [totalMinutes]); 
-
     useEffect(() => {
-        checkAchievements();
-    }, [totalMinutes, checkAchievements]); 
-
-    const handleSessionComplete = useCallback(() => {
-        const sessionMinutes = (hours * 60) + minutes;
-        setTotalMinutes(prev => prev + sessionMinutes);
-        addSession({ id: Date.now(), duration: sessionMinutes * 60 });
-        addNotification({ message: "Session Completed!", type: "success" });
-    }, [hours, minutes, addSession, addNotification]); 
-
-    const playSound = useCallback(() => {
-        if (isSoundEnabled && selectedAudio) {
-            const audio = new Audio(selectedAudio);
-            audio.play().catch(() => {});
+        const savedTime = localStorage.getItem('savedTime');
+        if (savedTime) {
+            setTime(parseInt(savedTime));
         }
-    }, [isSoundEnabled, selectedAudio]); 
-
-    useEffect(() => {
-        let quoteInterval;
-        if (isRunning) {
-            const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-            setMotivationalQuote(randomQuote);
-            quoteInterval = setInterval(() => {
-                const newQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-                setMotivationalQuote(newQuote);
-            }, 5 * 60 * 1000);
+        const savedStreak = localStorage.getItem('streak');
+        if (savedStreak) {
+            setStreak(parseInt(savedStreak));
         }
-        return () => clearInterval(quoteInterval);
-    }, [isRunning, motivationalQuotes]); 
+        const savedTotalMinutes = localStorage.getItem('totalMinutes');
+        if (savedTotalMinutes) {
+            setTotalMinutes(parseInt(savedTotalMinutes));
+        }
+        setMotivationalQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]);
+    }, [motivationalQuotes]);
 
-    const handleStart = useCallback(() => {
-        setIsRunning(true);
-        addNotification({ message: "Timer started", type: "info" });
-        trackSession({ id: Date.now(), duration: time * 1000 });
-    }, [time, addNotification, trackSession]); 
-
-    const handleStop = useCallback(() => {
-        setIsRunning(false);
-        addNotification({ message: "Timer stopped", type: "info" });
-    }, [addNotification]); 
-
-    const handleReset = useCallback(() => {
-        const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
-        trackReset(time);
-        setTime(totalSeconds);
-        setIsRunning(false);
-        setHours(0);
-        setMinutes(25);
-        setSeconds(0);
-        addNotification({ message: "Timer reset", type: "info" });
-    }, [hours, minutes, seconds, time, trackReset, addNotification]); 
-
-    const handleHoursChange = useCallback((e) => {
-        const value = parseInt(e.target.value, 10) || 0;
-        setHours(value);
-    }, []); 
-
-    const handleMinutesChange = useCallback((e) => {
-        const value = parseInt(e.target.value, 10) || 0;
-        setMinutes(value);
-    }, []); 
-
-    const handleSecondsChange = useCallback((e) => {
-        const value = parseInt(e.target.value, 10) || 0;
-        setSeconds(value);
-    }, []); 
-
-    // Effect to handle streaks when the component mounts
-    useEffect(() => {
-        const currentStreak = handleStreaks();
-        setStreak(currentStreak);
-    }, []); 
-
-    // Effect to handle the timer countdown
     useEffect(() => {
         let interval;
-        
-        if (isRunning && !isOnBreak) {
+        if (isRunning && time > 0) {
             interval = setInterval(() => {
-                setTime(prevTime => {
-                    if (prevTime <= 1) {
-                        playSound();
-                        setIsRunning(false);
-                        handleSessionComplete();
-                        return 0;
-                    }
-                    return prevTime - 1;
+                setTime((prevTime) => {
+                    const newTime = prevTime - 1;
+                    localStorage.setItem('savedTime', newTime.toString());
+                    return newTime;
                 });
             }, 1000);
-        } else if (isOnBreak) {
-            interval = setInterval(() => {
-                setBreakTime(prevTime => {
-                    if (prevTime <= 1) {
-                        setIsOnBreak(false);
-                        return 0;
-                    }
-                    return prevTime - 1;
-                });
-            }, 1000);
+        } else if (time === 0) {
+            handleTimerComplete();
         }
+        return () => clearInterval(interval);
+    }, [isRunning, time]);
 
-        return () => {
-            if (interval) {
-                clearInterval(interval);
-            }
-        };
-    }, [isRunning, isOnBreak, playSound, handleSessionComplete]); 
+    useEffect(() => {
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        const seconds = time % 60;
+        
+        setHours(hours);
+        setMinutes(minutes);
+        setSeconds(seconds);
+    }, [time]);
 
-    const totalTime = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
-    const progress = totalTime > 0 ? (time / totalTime) * 100 : 0;
+    const handleStart = () => {
+        if (!isRunning) {
+            setIsRunning(true);
+            trackSession();
+        }
+    };
 
-    const scrollToAchievements = useCallback(() => {
-        document.getElementById('achievements').scrollIntoView({ behavior: 'smooth' });
-    }, []);
+    const handlePause = () => {
+        setIsRunning(false);
+    };
+
+    const handleReset = () => {
+        setIsRunning(false);
+        setTime(25 * 60);
+        localStorage.setItem('savedTime', (25 * 60).toString());
+        trackReset();
+    };
+
+    const handleTimerComplete = () => {
+        setIsRunning(false);
+        if (isSoundEnabled) {
+            const audio = new Audio(selectedAudio);
+            audio.play();
+        }
+        
+        if (!isOnBreak) {
+            const newStreak = handleStreaks(streak);
+            setStreak(newStreak);
+            localStorage.setItem('streak', newStreak.toString());
+            
+            const newTotalMinutes = totalMinutes + Math.floor(time / 60);
+            setTotalMinutes(newTotalMinutes);
+            localStorage.setItem('totalMinutes', newTotalMinutes.toString());
+            
+            setIsOnBreak(true);
+            setBreakTime(5 * 60);
+            setTime(5 * 60);
+            addNotification("Time for a break! Take 5 minutes to rest.");
+        } else {
+            setIsOnBreak(false);
+            setTime(25 * 60);
+            addNotification("Break's over! Ready for another focused session?");
+        }
+    };
 
     return (
         <>
@@ -180,7 +133,7 @@ const TimerDisplay = ({ title, addSession }) => {
                         <input
                             type="number"
                             value={hours}
-                            onChange={handleHoursChange}
+                            onChange={(e) => setHours(parseInt(e.target.value, 10) || 0)}
                             min="0"
                             placeholder="Hours"
                             className={timerStyles.customTimeInput}
@@ -188,7 +141,7 @@ const TimerDisplay = ({ title, addSession }) => {
                         <input
                             type="number"
                             value={minutes}
-                            onChange={handleMinutesChange}
+                            onChange={(e) => setMinutes(parseInt(e.target.value, 10) || 0)}
                             min="0"
                             placeholder="Minutes"
                             className={timerStyles.customTimeInput}
@@ -196,7 +149,7 @@ const TimerDisplay = ({ title, addSession }) => {
                         <input
                             type="number"
                             value={seconds}
-                            onChange={handleSecondsChange}
+                            onChange={(e) => setSeconds(parseInt(e.target.value, 10) || 0)}
                             min="0"
                             placeholder="Seconds"
                             className={timerStyles.customTimeInput}
@@ -229,37 +182,15 @@ const TimerDisplay = ({ title, addSession }) => {
                         </label>
                     </div>
 
-                    <div className={timerStyles.progressBarContainer}>
-                        <div 
-                            className={timerStyles.progressBar}
-                            style={{ width: `${progress}%` }}
-                        />
-                    </div>
-
                     <div className={timerStyles.controls}>
                         <button onClick={handleStart} disabled={isRunning}>Start</button>
-                        <button onClick={handleStop} disabled={!isRunning}>Stop</button>
+                        <button onClick={handlePause} disabled={!isRunning}>Pause</button>
                         <button onClick={handleReset}>Reset</button>
-                        <button onClick={scrollToAchievements} className={timerStyles.achievementsButton}>
-                            Achievements
-                        </button>
                     </div>
 
-                    <div id="achievements" className={timerStyles.achievements}>
-                        <h2>Achievements</h2>
-                        <ul>
-                            {unlockedAchievements.map((achievementId) => {
-                                const achievement = achievements.find(a => a.id === achievementId);
-                                return <li key={achievementId}>{achievement.description}</li>;
-                            })}
-                        </ul>
+                    <div className={timerStyles.quote}>
+                        {motivationalQuote}
                     </div>
-
-                    {showUnlockAnimation && (
-                        <div className={timerStyles.unlockedTitle}>
-                            {unlockedTitle && <p>{unlockedTitle}</p>}
-                        </div>
-                    )}
                 </div>
             </div>
         </>
