@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { achievements } from "./achievements";
 import styles from "../settings/PageLayout.module.css";
 import achievementStyles from "./Achievements.module.css";
@@ -11,20 +11,6 @@ const getAchievementIcon = (achievement, isUnlocked) => {
     return '🎯';
 };
 
-const getAchievementDetails = (achievement) => {
-    if (achievement.id.startsWith('achieve_')) {
-        const minutes = achievement.id.split('_')[1];
-        return `Complete a focused session of ${minutes} minutes`;
-    }
-    if (achievement.id === 'start_timer_first_time') {
-        return "Begin your first focused session";
-    }
-    if (achievement.id === 'reset_under_three_minutes') {
-        return "Reset the timer before completing 3 minutes";
-    }
-    return "";
-};
-
 const getAchievementProgress = (achievement, userActions) => {
     if (achievement.id.startsWith('achieve_')) {
         const targetMinutes = parseInt(achievement.id.split('_')[1]);
@@ -34,15 +20,28 @@ const getAchievementProgress = (achievement, userActions) => {
     return achievement.criteria(userActions) ? 100 : 0;
 };
 
+const getAchievementDetails = (achievement) => {
+    if (achievement.id === 'start_timer_first_time') {
+        return `Start the timer for the first time`;
+    } else if (achievement.id === 'reset_under_three_minutes') {
+        return `Reset the timer under 3 minutes`;
+    }
+    return achievement.description;
+};
+
 const Achievements = () => {
-    const [userActions, setUserActions] = useState(() => {
-        const savedActions = localStorage.getItem("userActions");
-        return savedActions ? JSON.parse(savedActions) : {
-            startCount: 0,
-            resetUnderThreeMinutes: false,
-            totalTime: 0
-        };
+    const [userActions, setUserActions] = useState({
+        startCount: 0,
+        resetUnderThreeMinutes: false,
+        totalTime: 0
     });
+
+    useEffect(() => {
+        const savedActions = localStorage.getItem("userActions");
+        if (savedActions) {
+            setUserActions(JSON.parse(savedActions));
+        }
+    }, []);
 
     return (
         <>
@@ -58,25 +57,23 @@ const Achievements = () => {
                             
                             return (
                                 <div 
-                                    key={achievement.id} 
+                                    key={achievement.id}
                                     className={`${achievementStyles.achievement} ${isUnlocked ? achievementStyles.unlocked : achievementStyles.locked}`}
                                 >
-                                    <div>
-                                        <div className={achievementStyles.achievementHeader}>
-                                            <span className={achievementStyles.achievementIcon}>
-                                                {isUnlocked ? '🏆' : '🔒'}
-                                            </span>
-                                            <h3>{achievement.description}</h3>
-                                        </div>
-                                        <div className={achievementStyles.details}>
-                                            <p className={achievementStyles.requirement}>{details}</p>
-                                            {achievement.id.startsWith('achieve_') && (
-                                                <p>Progress: {Math.floor(userActions.totalTime / 60)} / {achievement.id.split('_')[1]} minutes</p>
-                                            )}
-                                            {achievement.id === 'start_timer_first_time' && (
-                                                <p>Times started: {userActions.startCount}</p>
-                                            )}
-                                        </div>
+                                    <div className={achievementStyles.achievementHeader}>
+                                        <span className={achievementStyles.achievementIcon}>
+                                            {isUnlocked ? '🏆' : '🔒'}
+                                        </span>
+                                        <h3>{achievement.description}</h3>
+                                    </div>
+                                    <div className={achievementStyles.details}>
+                                        <p className={achievementStyles.requirement}>{details}</p>
+                                        {achievement.id.startsWith('achieve_') && (
+                                            <p>Progress: {Math.floor(userActions.totalTime / 60)} / {achievement.id.split('_')[1]} minutes</p>
+                                        )}
+                                        {achievement.id === 'start_timer_first_time' && (
+                                            <p>Times started: {userActions.startCount}</p>
+                                        )}
                                     </div>
                                     <div className={achievementStyles.progressSection}>
                                         <div className={achievementStyles.progressBar}>
