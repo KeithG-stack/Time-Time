@@ -1,131 +1,141 @@
-import React, { useState, useEffect } from "react"; // Import necessary hooks from React
-import styles from '../settings/PageLayout.module.css'; // Import shared layout styles
-import timerStyles from './TimerDisplay.module.css'; // Import timer-specific styles
-import { useDarkMode } from '../hooks/useDarkMode'; // Import custom hook for dark mode
-import { useNotifications } from '../settings/settingsContext'; // Import useNotifications hook for notifications
-import useAnalytics from '../hooks/Analytics'; // Import useAnalytics hook for tracking sessions and achievements
-import { achievements } from '../common/achievements'; // Import achievements array
-import { handleStreaks } from '../common/streaks'; // Import function to handle streaks
-import { achievementTypes } from "../RankingTittle/Rank"; // Import achievement types and tiers
-import Navbar from "../settings/Navbar"; // Import the Navbar component
+import React, { useState, useEffect, useCallback, useMemo } from "react"; 
+import styles from '../settings/PageLayout.module.css'; 
+import timerStyles from './TimerDisplay.module.css'; 
+import { useNotifications } from '../settings/settingsContext'; 
+import useAnalytics from '../hooks/Analytics'; 
+import { achievements } from '../achievements/achievements'; 
+import { handleStreaks } from '../common/streaks'; 
+import { achievementTypes } from "../RankingTittle/Rank"; 
+import Navbar from "../settings/Navbar"; 
 
-const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
-    // State to keep track of the time in seconds
-    const [time, setTime] = useState(25 * 60);
+const TimerDisplay = ({ title, addSession }) => {
+    const [time, setTime] = useState(25 * 60); 
+    const [isRunning, setIsRunning] = useState(false); 
+    const [hours, setHours] = useState(0); 
+    const [minutes, setMinutes] = useState(25); 
+    const [seconds, setSeconds] = useState(0); 
+    const [streak, setStreak] = useState(0); 
+    const [unlockedTitle, setUnlockedTitle] = useState(""); 
+    const [showUnlockAnimation, setShowUnlockAnimation] = useState(false); 
+    const [motivationalQuote, setMotivationalQuote] = useState(""); 
+    const [isOnBreak, setIsOnBreak] = useState(false); 
+    const [breakTime, setBreakTime] = useState(0); 
+    const [isSoundEnabled, setIsSoundEnabled] = useState(true); 
+    const [selectedAudio, setSelectedAudio] = useState('/alarm.mp3'); 
+    const [totalMinutes, setTotalMinutes] = useState(0); 
 
-    // State to track if the timer is running
-    const [isRunning, setIsRunning] = useState(false);
+    const { addNotification } = useNotifications(); 
+    const { trackSession, trackReset, unlockedAchievements } = useAnalytics(); 
 
-    // State to track custom time input
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(25);
-    const [seconds, setSeconds] = useState(0);
-
-    // State to track the streak
-    const [streak, setStreak] = useState(0);
-
-    // State to track unlocked achievements and animation
-    const [unlockedTitle, setUnlockedTitle] = useState("");
-    const [showUnlockAnimation, setShowUnlockAnimation] = useState(false);
-
-    // State to track motivational quotes
-    const [motivationalQuote, setMotivationalQuote] = useState("");
-
-    // State to track break time
-    const [isOnBreak, setIsOnBreak] = useState(false);
-    const [breakTime, setBreakTime] = useState(0);
-
-    // State to toggle sound on/off
-    const [isSoundEnabled, setIsSoundEnabled] = useState(true);
-
-    // State to track the selected audio file
-    const [selectedAudio, setSelectedAudio] = useState('/alarm.mp3');
-
-    // State to track total minutes for achievements
-    const [totalMinutes, setTotalMinutes] = useState(0);
-
-    // Custom hooks for dark mode, notifications, and analytics
-    const { addNotification } = useNotifications();
-    const { trackSession, trackReset, unlockedAchievements } = useAnalytics();
+    const motivationalQuotes = useMemo(() => [
+        "The secret of getting ahead is getting started.",
+        "Don't watch the clock; do what it does. Keep going.",
+        "Success is the sum of small efforts, repeated day in and day out.",
+        "You don't have to be great to start, but you have to start to be great.",
+        "Believe you can and you're halfway there.",
+        "Focus on the process, and the results will follow.",
+        "Every minute counts. Make it productive!",
+        "Small steps every day lead to big achievements."
+    ], []); 
 
     // Function to check and unlock achievements
-    const checkAchievements = () => {
+    const checkAchievements = useCallback(() => {
         for (const type in achievementTypes) {
             const { title, tiers } = achievementTypes[type];
             for (const tier of tiers) {
                 if (totalMinutes >= tier.requirement) {
                     setUnlockedTitle(`${title} - ${tier.reward}`);
-                    setShowUnlockAnimation(true); // Trigger the unlock animation
-                    setTimeout(() => setShowUnlockAnimation(false), 2000); // Hide the animation after 2 seconds
+                    setShowUnlockAnimation(true);
+                    setTimeout(() => setShowUnlockAnimation(false), 2000);
                 }
             }
         }
-    };
+    }, [totalMinutes]); 
 
-    // Effect to check achievements whenever totalMinutes changes
     useEffect(() => {
         checkAchievements();
-    }, [totalMinutes]);
+    }, [totalMinutes, checkAchievements]); 
 
-    // Function to handle session completion
-    const handleSessionComplete = () => {
-        const totalMinutes = (hours * 60) + minutes;
-        setTotalMinutes((prev) => prev + totalMinutes); // Add session minutes to total
-        addSession({ id: Date.now(), duration: totalMinutes * 60 });
+    const handleSessionComplete = useCallback(() => {
+        const sessionMinutes = (hours * 60) + minutes;
+        setTotalMinutes(prev => prev + sessionMinutes);
+        addSession({ id: Date.now(), duration: sessionMinutes * 60 });
         addNotification({ message: "Session Completed!", type: "success" });
-    };
+    }, [hours, minutes, addSession, addNotification]); 
 
-    // Function to play the selected sound
-    const playSound = () => {
-        if (isSoundEnabled) {
+    const playSound = useCallback(() => {
+        if (isSoundEnabled && selectedAudio) {
             const audio = new Audio(selectedAudio);
-            audio.play();
+            audio.play().catch(() => {});
         }
-    };
+    }, [isSoundEnabled, selectedAudio]); 
 
-    // Array of motivational quotes
-    const motivationalQuotes = [
-        "The secret of getting ahead is getting started.",
-        "Don’t watch the clock; do what it does. Keep going.",
-        "Success is the sum of small efforts, repeated day in and day out.",
-        "You don’t have to be great to start, but you have to start to be great.",
-        "Believe you can and you’re halfway there.",
-        "Focus on the process, and the results will follow.",
-        "Every minute counts. Make it productive!",
-        "Small steps every day lead to big achievements."
-    ];
-
-    // Effect to change motivational quotes every 5 minutes when the timer is running
     useEffect(() => {
         let quoteInterval;
         if (isRunning) {
+            const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            setMotivationalQuote(randomQuote);
             quoteInterval = setInterval(() => {
-                const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-                setMotivationalQuote(randomQuote);
-            }, 300000); // Change quote every 5 minutes
+                const newQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+                setMotivationalQuote(newQuote);
+            }, 5 * 60 * 1000);
         }
-        return () => {
-            if (quoteInterval) clearInterval(quoteInterval); // Cleanup interval on stop
-        };
-    }, [isRunning]);
+        return () => clearInterval(quoteInterval);
+    }, [isRunning, motivationalQuotes]); 
+
+    const handleStart = useCallback(() => {
+        setIsRunning(true);
+        addNotification({ message: "Timer started", type: "info" });
+        trackSession({ id: Date.now(), duration: time * 1000 });
+    }, [time, addNotification, trackSession]); 
+
+    const handleStop = useCallback(() => {
+        setIsRunning(false);
+        addNotification({ message: "Timer stopped", type: "info" });
+    }, [addNotification]); 
+
+    const handleReset = useCallback(() => {
+        const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
+        trackReset(time);
+        setTime(totalSeconds);
+        setIsRunning(false);
+        setHours(0);
+        setMinutes(25);
+        setSeconds(0);
+        addNotification({ message: "Timer reset", type: "info" });
+    }, [hours, minutes, seconds, time, trackReset, addNotification]); 
+
+    const handleHoursChange = useCallback((e) => {
+        const value = parseInt(e.target.value, 10) || 0;
+        setHours(value);
+    }, []); 
+
+    const handleMinutesChange = useCallback((e) => {
+        const value = parseInt(e.target.value, 10) || 0;
+        setMinutes(value);
+    }, []); 
+
+    const handleSecondsChange = useCallback((e) => {
+        const value = parseInt(e.target.value, 10) || 0;
+        setSeconds(value);
+    }, []); 
 
     // Effect to handle streaks when the component mounts
     useEffect(() => {
         const currentStreak = handleStreaks();
         setStreak(currentStreak);
-    }, []);
+    }, []); 
 
     // Effect to handle the timer countdown
     useEffect(() => {
         let interval;
+        
         if (isRunning && !isOnBreak) {
             interval = setInterval(() => {
-                setTime((prevTime) => {
+                setTime(prevTime => {
                     if (prevTime <= 1) {
                         playSound();
                         setIsRunning(false);
-                        setIsTimerRunning(false); // Update the state to indicate the timer is not running
-                        clearInterval(interval);
                         handleSessionComplete();
                         return 0;
                     }
@@ -134,70 +144,29 @@ const TimerDisplay = ({ title, addSession, setIsTimerRunning }) => {
             }, 1000);
         } else if (isOnBreak) {
             interval = setInterval(() => {
-                setBreakTime((prevBreakTime) => {
-                    if (prevBreakTime <= 1) {
+                setBreakTime(prevTime => {
+                    if (prevTime <= 1) {
                         setIsOnBreak(false);
-                        clearInterval(interval);
                         return 0;
                     }
-                    return prevBreakTime - 1;
+                    return prevTime - 1;
                 });
             }, 1000);
-        } else if (!isRunning && time !== 0) {
-            clearInterval(interval);
         }
-        return () => clearInterval(interval); // Cleanup interval on unmount or dependency change
-    }, [isRunning, isOnBreak, time, breakTime]);
 
-    // Function to handle the start of the timer
-    const handleStart = () => {
-        setIsRunning(true);
-        setIsTimerRunning(true); // Update the state to indicate the timer is running
-        addNotification({ message: "Timer started", type: "info" });
-        trackSession({ id: Date.now(), duration: time * 1000 });
-    };
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [isRunning, isOnBreak, playSound, handleSessionComplete]); 
 
-    // Function to handle the stop of the timer
-    const handleStop = () => {
-        setIsRunning(false);
-        setIsTimerRunning(false); // Update the state to indicate the timer is not running
-        addNotification({ message: "Timer stopped", type: "info" });
-    };
-
-    // Function to handle the reset of the timer
-    const handleReset = () => {
-        const totalSeconds = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
-        trackReset(time);
-        setTime(totalSeconds);
-        setIsRunning(false);
-        setIsTimerRunning(false); // Update the state to indicate the timer is not running
-        setHours(0);
-        setMinutes(25);
-        setSeconds(0);
-        addNotification({ message: "Timer reset", type: "info" });
-    };
-
-    // Function to handle custom time input changes
-    const handleHoursChange = (e) => {
-        setHours(parseInt(e.target.value, 10) || 0);
-    };
-
-    const handleMinutesChange = (e) => {
-        setMinutes(parseInt(e.target.value, 10) || 0);
-    };
-
-    const handleSecondsChange = (e) => {
-        setSeconds(parseInt(e.target.value, 10) || 0);
-    };
-
-    // Calculate total time and progress for the progress bar
     const totalTime = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
     const progress = totalTime > 0 ? (time / totalTime) * 100 : 0;
 
-    // Function to scroll to the achievements section
-    const scrollToAchievements = () => {
+    const scrollToAchievements = useCallback(() => {
         document.getElementById('achievements').scrollIntoView({ behavior: 'smooth' });
-    };
+    }, []);
 
     return (
         <>

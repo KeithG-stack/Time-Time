@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import TimerDisplay from './timer/TimerDisplay.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Settings from './settings/Settings.jsx';
 import ChartStats from './dashboard/ChatStats.jsx';
-import Navbar from './settings/Navbar.jsx';
+import Achievements from './achievements/Achievements.jsx';
 import RankingSystem from "./RankingTittle/RankingSystem.jsx";
 import { NotificationProvider } from './settings/settingsContext';
 import NotificationDisplay from './settings/NotificationDisplay';
@@ -15,17 +15,18 @@ function App() {
         const savedSessions = localStorage.getItem("completedSessions");
         return savedSessions ? JSON.parse(savedSessions) : [];
     });
-    const [isTimerRunning, setIsTimerRunning] = useState(false);
 
-    const handleThemeChange = (color) => {
+    const handleThemeChange = useCallback((color) => {
         setThemeColor(color);
-    };
+    }, []);
     
-    const addSession = (session) => {
-        const updatedSessions = [...sessions, session];
-        setSessions(updatedSessions);
-        localStorage.setItem("completedSessions", JSON.stringify(updatedSessions));
-    };
+    const addSession = useCallback((session) => {
+        setSessions(prevSessions => {
+            const updatedSessions = [...prevSessions, session];
+            localStorage.setItem("completedSessions", JSON.stringify(updatedSessions));
+            return updatedSessions;
+        });
+    }, []);
     
     useEffect(() => {
         document.body.style.backgroundColor = themeColor;
@@ -36,9 +37,15 @@ function App() {
             <Router>
                 <div>
                     <Routes>
-                        <Route path="/" element={<TimerDisplay title="Focus Timer" addSession={addSession} setIsTimerRunning={setIsTimerRunning} />} />
+                        <Route path="/" element={
+                            <TimerDisplay 
+                                title="Focus Timer" 
+                                addSession={addSession}
+                            />
+                        } />
                         <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} />} />
                         <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} />
+                        <Route path="/achievements" element={<Achievements />} />
                         <Route path="/ranking-system" element={<RankingSystem />} />
                     </Routes>
                     <NotificationDisplay />

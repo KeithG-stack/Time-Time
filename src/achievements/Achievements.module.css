@@ -1,0 +1,84 @@
+.achievementsList {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.achievement {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.achievementHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.achievementIcon {
+    font-size: 1.5em;
+}
+
+.achievement h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.1em;
+    flex-grow: 1;
+}
+
+.details {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9em;
+}
+
+.requirement {
+    color: #4CAF50;
+    font-weight: 500;
+    margin: 8px 0;
+}
+
+.details p {
+    margin: 4px 0;
+}
+
+.progressSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progressBar {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.status {
+    font-size: 0.9em;
+    text-align: right;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.unlocked {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+.locked {
+    background-color: rgba(255, 255, 255, 0.05);
+}

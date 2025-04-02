@@ -38,6 +38,14 @@ const Navbar = () => {
                         Ranking System
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink
+                        to="/achievements"
+                        className={({ isActive }) => (isActive ? styles.active : "")}
+                    >
+                        Achievements
+                    </NavLink>
+                </li>
             </ul>
         </nav>
     );

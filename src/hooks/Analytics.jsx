@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNotifications } from "../settings/settingsContext";
-import { achievements } from "../common/achievements";
+import { achievements } from "../achievements/achievements";
 
 // Hook to track user analytics
 const useAnalytics = () => {
