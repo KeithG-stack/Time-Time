@@ -70,6 +70,19 @@ Allow users to add custom motivational quotes.
 Add dark mode for better accessibility.
 
 
+## Latest Updates
+
+### Achievements System
+- Achievements have been moved to a dedicated page
+- Added progress tracking for time-based achievements
+- Implemented lock icons for incomplete achievements
+- Maintained consistent styling across the application
+
+### Timer Improvements
+- Removed achievements from the home page
+- Focused the home page on timer functionality
+- Added motivational quotes during sessions
+
 ## Installation
 
 1. Clone the repository:
@@ -148,4 +161,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
 Contributing
 
 Contributions are welcome! If you'd like to contribute, please fork the repository and submit a pull request.
-
