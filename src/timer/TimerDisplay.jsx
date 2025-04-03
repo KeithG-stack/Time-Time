@@ -1,27 +1,18 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react"; 
-import styles from '../settings/PageLayout.module.css'; 
-import timerStyles from './TimerDisplay.module.css'; 
-import { useNotifications } from '../settings/settingsContext'; 
-import useAnalytics from '../hooks/Analytics'; 
-import { handleStreaks } from '../common/streaks'; 
-import Navbar from "../settings/Navbar"; 
+import React, { useState, useEffect, useMemo } from "react";
+import styles from '../settings/PageLayout.module.css';
+import timerStyles from './TimerDisplay.module.css';
+import Navbar from "../settings/Navbar";
 
-const TimerDisplay = ({ title, addSession }) => {
-    const [time, setTime] = useState(25 * 60); 
-    const [isRunning, setIsRunning] = useState(false); 
-    const [hours, setHours] = useState(0); 
-    const [minutes, setMinutes] = useState(25); 
-    const [seconds, setSeconds] = useState(0); 
-    const [streak, setStreak] = useState(0); 
-    const [motivationalQuote, setMotivationalQuote] = useState(""); 
-    const [isOnBreak, setIsOnBreak] = useState(false); 
-    const [breakTime, setBreakTime] = useState(0); 
-    const [isSoundEnabled, setIsSoundEnabled] = useState(true); 
-    const [selectedAudio, setSelectedAudio] = useState('/alarm.mp3'); 
-    const [totalMinutes, setTotalMinutes] = useState(0); 
-
-    const { addNotification } = useNotifications(); 
-    const { trackSession, trackReset } = useAnalytics(); 
+const TimerDisplay = ({ title }) => {
+    const [time, setTime] = useState(25 * 60); // Default to 25 minutes
+    const [isRunning, setIsRunning] = useState(false);
+    const [hours, setHours] = useState(0);
+    const [minutes, setMinutes] = useState(25); // Default to 25 minutes
+    const [seconds, setSeconds] = useState(0);
+    const [streak, setStreak] = useState(0);
+    const [motivationalQuote, setMotivationalQuote] = useState("");
+    const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+    const [selectedAudio, setSelectedAudio] = useState('/alarm.mp3');
 
     const motivationalQuotes = useMemo(() => [
         "The secret of getting ahead is getting started.",
@@ -32,21 +23,9 @@ const TimerDisplay = ({ title, addSession }) => {
         "Focus on the process, and the results will follow.",
         "Every minute counts. Make it productive!",
         "Small steps every day lead to big achievements."
-    ], []); 
+    ], []);
 
     useEffect(() => {
-        const savedTime = localStorage.getItem('savedTime');
-        if (savedTime) {
-            setTime(parseInt(savedTime));
-        }
-        const savedStreak = localStorage.getItem('streak');
-        if (savedStreak) {
-            setStreak(parseInt(savedStreak));
-        }
-        const savedTotalMinutes = localStorage.getItem('totalMinutes');
-        if (savedTotalMinutes) {
-            setTotalMinutes(parseInt(savedTotalMinutes));
-        }
         setMotivationalQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]);
     }, [motivationalQuotes]);
 
@@ -54,11 +33,7 @@ const TimerDisplay = ({ title, addSession }) => {
         let interval;
         if (isRunning && time > 0) {
             interval = setInterval(() => {
-                setTime((prevTime) => {
-                    const newTime = prevTime - 1;
-                    localStorage.setItem('savedTime', newTime.toString());
-                    return newTime;
-                });
+                setTime((prevTime) => prevTime - 1);
             }, 1000);
         } else if (time === 0) {
             handleTimerComplete();
@@ -70,7 +45,7 @@ const TimerDisplay = ({ title, addSession }) => {
         const hours = Math.floor(time / 3600);
         const minutes = Math.floor((time % 3600) / 60);
         const seconds = time % 60;
-        
+
         setHours(hours);
         setMinutes(minutes);
         setSeconds(seconds);
@@ -78,7 +53,6 @@ const TimerDisplay = ({ title, addSession }) => {
 
     const handleStart = () => {
         setIsRunning(true);
-        trackSession({ id: Date.now().toString(), duration: time * 1000 });
     };
 
     const handlePause = () => {
@@ -87,13 +61,10 @@ const TimerDisplay = ({ title, addSession }) => {
 
     const handleReset = () => {
         setIsRunning(false);
-        // Calculate total time from input values
-        const totalInputTime = (hours * 3600) + (minutes * 60) + seconds;
-        // Reset to input values
-        setTime(totalInputTime);
-        // Save to localStorage
-        localStorage.setItem('savedTime', totalInputTime.toString());
-        trackReset();
+        setTime(25 * 60); // Reset to 25 minutes
+        setHours(0);
+        setMinutes(25); // Reset minutes to 25
+        setSeconds(0);
     };
 
     const handleTimerComplete = () => {
@@ -102,28 +73,10 @@ const TimerDisplay = ({ title, addSession }) => {
             const audio = new Audio(selectedAudio);
             audio.play();
         }
-        
-        if (!isOnBreak) {
-            const newStreak = handleStreaks(streak);
-            setStreak(newStreak);
-            localStorage.setItem('streak', newStreak.toString());
-            
-            const newTotalMinutes = totalMinutes + Math.floor(time / 60);
-            setTotalMinutes(newTotalMinutes);
-            localStorage.setItem('totalMinutes', newTotalMinutes.toString());
-            
-            setIsOnBreak(true);
-            setBreakTime(5 * 60);
-            setTime(5 * 60);
-            addNotification("Time for a break! Take 5 minutes to rest.");
-        } else {
-            setIsOnBreak(false);
-            setTime(25 * 60);
-            addNotification("Break's over! Ready for another focused session?");
-        }
+        alert("Time's up! Great job!");
     };
 
-    const totalTime = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
+    const totalTime = 25 * 60; // Default total time is 25 minutes
     const progress = totalTime > 0 ? (time / totalTime) * 100 : 0;
 
     return (
@@ -134,39 +87,12 @@ const TimerDisplay = ({ title, addSession }) => {
                     <h1 className={styles.pageTitle}>{title}</h1>
                     <p className={timerStyles.streakText}>Current Streak: {streak} days</p>
 
-                    <div className={timerStyles.timeInputs}>
-                        <input
-                            type="number"
-                            value={hours}
-                            onChange={(e) => setHours(parseInt(e.target.value, 10) || 0)}
-                            min="0"
-                            placeholder="Hours"
-                            className={timerStyles.customTimeInput}
-                        />
-                        <input
-                            type="number"
-                            value={minutes}
-                            onChange={(e) => setMinutes(parseInt(e.target.value, 10) || 0)}
-                            min="0"
-                            placeholder="Minutes"
-                            className={timerStyles.customTimeInput}
-                        />
-                        <input
-                            type="number"
-                            value={seconds}
-                            onChange={(e) => setSeconds(parseInt(e.target.value, 10) || 0)}
-                            min="0"
-                            placeholder="Seconds"
-                            className={timerStyles.customTimeInput}
-                        />
-                    </div>
-
                     <div className={timerStyles.time}>
                         {new Date(time * 1000).toISOString().substr(11, 8)}
                     </div>
 
                     <div className={timerStyles.progressBarContainer}>
-                        <div 
+                        <div
                             className={timerStyles.progressBar}
                             style={{ width: `${progress}%` }}
                         />
