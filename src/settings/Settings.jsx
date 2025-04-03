@@ -4,7 +4,7 @@ import pageStyles from './PageLayout.module.css';
 import { useNotifications } from './settingsContext';
 import Navbar from "./Navbar";
 
-const Settings = ({ onThemeChange }) => {
+const Settings = ({ onThemeChange, onTimerChange }) => {
     const [breakTime, setBreakTime] = useState(0);
     const handleBreak = (breakDuration) => {
         setBreakTime(breakDuration);
@@ -36,6 +36,16 @@ const Settings = ({ onThemeChange }) => {
         } else {
             addNotification({ message: 'Please select a future time for your session.', type: 'error' });
         }
+    };
+
+    const [customHours, setCustomHours] = useState(0);
+    const [customMinutes, setCustomMinutes] = useState(25); // Default to 25 minutes
+    const [customSeconds, setCustomSeconds] = useState(0);
+
+    const handleSave = () => {
+        const totalSeconds = (customHours * 3600) + (customMinutes * 60) + customSeconds;
+        onTimerChange(totalSeconds); // Pass the custom time to the parent component
+        alert("Timer settings saved!");
     };
 
     return (
@@ -76,6 +86,38 @@ const Settings = ({ onThemeChange }) => {
                                 />
                                 <button onClick={handlePlanSession}>Plan Session</button>
                             </div>
+                        </div>
+
+                        <div className={styles.settingGroup}>
+                            <h2>Customize Timer</h2>
+                            <div className={styles.settingItem}>
+                                <label>Hours:</label>
+                                <input
+                                    type="number"
+                                    value={customHours}
+                                    onChange={(e) => setCustomHours(parseInt(e.target.value, 10) || 0)}
+                                    min="0"
+                                />
+                            </div>
+                            <div className={styles.settingItem}>
+                                <label>Minutes:</label>
+                                <input
+                                    type="number"
+                                    value={customMinutes}
+                                    onChange={(e) => setCustomMinutes(parseInt(e.target.value, 10) || 0)}
+                                    min="0"
+                                />
+                            </div>
+                            <div className={styles.settingItem}>
+                                <label>Seconds:</label>
+                                <input
+                                    type="number"
+                                    value={customSeconds}
+                                    onChange={(e) => setCustomSeconds(parseInt(e.target.value, 10) || 0)}
+                                    min="0"
+                                />
+                            </div>
+                            <button onClick={handleSave}>Save Timer</button>
                         </div>
                     </div>
                 </div>

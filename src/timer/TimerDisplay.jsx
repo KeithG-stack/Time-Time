@@ -3,12 +3,9 @@ import styles from '../settings/PageLayout.module.css';
 import timerStyles from './TimerDisplay.module.css';
 import Navbar from "../settings/Navbar";
 
-const TimerDisplay = ({ title }) => {
-    const [time, setTime] = useState(25 * 60); // Default to 25 minutes
+const TimerDisplay = ({ title, initialTime }) => {
+    const [time, setTime] = useState(initialTime); // Use the initial time from props
     const [isRunning, setIsRunning] = useState(false);
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(25); // Default to 25 minutes
-    const [seconds, setSeconds] = useState(0);
     const [streak, setStreak] = useState(0);
     const [motivationalQuote, setMotivationalQuote] = useState("");
     const [isSoundEnabled, setIsSoundEnabled] = useState(true);
@@ -41,16 +38,6 @@ const TimerDisplay = ({ title }) => {
         return () => clearInterval(interval);
     }, [isRunning, time]);
 
-    useEffect(() => {
-        const hours = Math.floor(time / 3600);
-        const minutes = Math.floor((time % 3600) / 60);
-        const seconds = time % 60;
-
-        setHours(hours);
-        setMinutes(minutes);
-        setSeconds(seconds);
-    }, [time]);
-
     const handleStart = () => {
         setIsRunning(true);
     };
@@ -61,10 +48,7 @@ const TimerDisplay = ({ title }) => {
 
     const handleReset = () => {
         setIsRunning(false);
-        setTime(25 * 60); // Reset to 25 minutes
-        setHours(0);
-        setMinutes(25); // Reset minutes to 25
-        setSeconds(0);
+        setTime(initialTime); // Reset to the initial time from props
     };
 
     const handleTimerComplete = () => {
@@ -76,7 +60,7 @@ const TimerDisplay = ({ title }) => {
         alert("Time's up! Great job!");
     };
 
-    const totalTime = 25 * 60; // Default total time is 25 minutes
+    const totalTime = initialTime; // Use the initial time for progress calculation
     const progress = totalTime > 0 ? (time / totalTime) * 100 : 0;
 
     return (

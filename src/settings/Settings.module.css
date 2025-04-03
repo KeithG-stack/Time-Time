@@ -17,6 +17,7 @@
     flex-direction: column;
     gap: 30px;
     align-items: center;
+    margin-top: 20px;
 }
 
 .settingItem {
@@ -26,6 +27,7 @@
     gap: 15px;
     width: 100%;
     max-width: 400px;
+    margin-bottom: 10px;
 }
 
 .settingItem label {
@@ -33,6 +35,8 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-right: 10px;
+    font-weight: bold;
 }
 
 .settingItem input[type="color"] {
@@ -42,6 +46,12 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.settingItem input {
+    padding: 5px;
+    width: 60px;
+    text-align: center;
 }
 
 .breakButtons {
@@ -159,5 +169,19 @@
 }
 
 .breakSettings button:hover {
+    background-color: #0056b3;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
     background-color: #0056b3;
 }
