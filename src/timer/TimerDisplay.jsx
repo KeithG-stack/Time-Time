@@ -25,7 +25,7 @@ const TimerDisplay = ({ title, addSession }) => {
 
     const motivationalQuotes = useMemo(() => [
         "The secret of getting ahead is getting started.",
-        "Don't watch the clock; do what it does. Keep going.",
+        "Don't watch the clock; do what it takes. Keep going.",
         "Success is the sum of small efforts, repeated day in and day out.",
         "You don't have to be great to start, but you have to start to be great.",
         "Believe you can and you're halfway there.",
@@ -77,10 +77,8 @@ const TimerDisplay = ({ title, addSession }) => {
     }, [time]);
 
     const handleStart = () => {
-        if (!isRunning) {
-            setIsRunning(true);
-            trackSession();
-        }
+        setIsRunning(true);
+        trackSession({ id: Date.now().toString(), duration: time * 1000 });
     };
 
     const handlePause = () => {
@@ -89,8 +87,12 @@ const TimerDisplay = ({ title, addSession }) => {
 
     const handleReset = () => {
         setIsRunning(false);
-        setTime(25 * 60);
-        localStorage.setItem('savedTime', (25 * 60).toString());
+        // Calculate total time from input values
+        const totalInputTime = (hours * 3600) + (minutes * 60) + seconds;
+        // Reset to input values
+        setTime(totalInputTime);
+        // Save to localStorage
+        localStorage.setItem('savedTime', totalInputTime.toString());
         trackReset();
     };
 
@@ -120,6 +122,9 @@ const TimerDisplay = ({ title, addSession }) => {
             addNotification("Break's over! Ready for another focused session?");
         }
     };
+
+    const totalTime = (parseInt(hours) * 3600) + (parseInt(minutes) * 60) + (parseInt(seconds));
+    const progress = totalTime > 0 ? (time / totalTime) * 100 : 0;
 
     return (
         <>
@@ -158,6 +163,13 @@ const TimerDisplay = ({ title, addSession }) => {
 
                     <div className={timerStyles.time}>
                         {new Date(time * 1000).toISOString().substr(11, 8)}
+                    </div>
+
+                    <div className={timerStyles.progressBarContainer}>
+                        <div 
+                            className={timerStyles.progressBar}
+                            style={{ width: `${progress}%` }}
+                        />
                     </div>
 
                     <div className={timerStyles.audioSettings}>

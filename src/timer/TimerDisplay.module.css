@@ -83,6 +83,21 @@
     transition: width 1s linear;
 }
 
+.progressBarContainer {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.progressBar {
+    height: 100%;
+    background-color: #4caf50;
+    transition: width 1s linear;
+}
+
 .audioSettings {
     display: flex;
     gap: 20px;

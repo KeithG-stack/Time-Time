@@ -21,9 +21,9 @@ const useAnalytics = () => {
     localStorage.setItem("unlockedAchievements", JSON.stringify(unlockedAchievements));
   }, [unlockedAchievements]);
 
-  const trackSession = (session) => {
+  const trackSession = (session = { id: Date.now().toString() }) => {
     addNotification({
-      message: `Session ${session.id} started`,
+      message: `Session started`,
       type: "info",
     });
 
@@ -34,17 +34,10 @@ const useAnalytics = () => {
 
     setTimeout(() => {
       addNotification({
-        message: `Session ${session.id} ended`,
-        type: "info",
+        message: `Session completed`,
+        type: "success",
       });
-
-      setActions((prevActions) => ({
-        ...prevActions,
-        startCount: prevActions.startCount + 1,
-    }));
-
-      checkAchievements();
-    }, session.duration);
+    }, session.duration || 1500);
   };
 
   /**
