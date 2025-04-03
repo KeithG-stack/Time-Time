@@ -16,7 +16,15 @@ function App() {
         const savedSessions = localStorage.getItem("completedSessions");
         return savedSessions ? JSON.parse(savedSessions) : [];
     });
-    const [customTimer, setCustomTimer] = useState(25 * 60); // Default to 25 minutes
+    const [customTimer, setCustomTimer] = useState(() => {
+        // Load the custom timer from localStorage or default to 25 minutes
+        const savedTimer = localStorage.getItem("customTimer");
+        if (savedTimer) {
+            const { hours, minutes, seconds } = JSON.parse(savedTimer);
+            return (hours * 3600) + (minutes * 60) + seconds;
+        }
+        return 25 * 60; // Default to 25 minutes
+    });
 
     const handleThemeChange = useCallback((color) => {
         setThemeColor(color);

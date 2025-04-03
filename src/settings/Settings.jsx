@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Settings.module.css';
 import pageStyles from './PageLayout.module.css';
 import { useNotifications } from './settingsContext';
@@ -42,8 +42,32 @@ const Settings = ({ onThemeChange, onTimerChange }) => {
     const [customMinutes, setCustomMinutes] = useState(25); // Default to 25 minutes
     const [customSeconds, setCustomSeconds] = useState(0);
 
+    // Load saved timer settings from localStorage when the component mounts
+    useEffect(() => {
+        const savedTimer = localStorage.getItem("customTimer");
+        if (savedTimer) {
+            const { hours, minutes, seconds } = JSON.parse(savedTimer);
+            setCustomHours(hours);
+            setCustomMinutes(minutes);
+            setCustomSeconds(seconds);
+            const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+            onTimerChange(totalSeconds); // Update the timer with the saved value
+        }
+    }, [onTimerChange]);
+
     const handleSave = () => {
         const totalSeconds = (customHours * 3600) + (customMinutes * 60) + customSeconds;
+
+        // Save the timer settings to localStorage
+        localStorage.setItem(
+            "customTimer",
+            JSON.stringify({
+                hours: customHours,
+                minutes: customMinutes,
+                seconds: customSeconds,
+            })
+        );
+
         onTimerChange(totalSeconds); // Pass the custom time to the parent component
         alert("Timer settings saved!");
     };
