@@ -8,6 +8,6 @@ const StartStopButton = ({ isRunning, onStart, onStop }) => {
             {isRunning ? "Stop" : "Start Focus Session"}
         </button>
     );
-};
+}; 
 
 export default StartStopButton;

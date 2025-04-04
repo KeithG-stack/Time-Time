@@ -45,6 +45,15 @@ function App() {
     });
 
     /**
+     * Sound enabled state
+     * @type {[boolean, Function]} 
+     */
+    const [isSoundEnabled, setIsSoundEnabled] = useState(() => {
+        const savedSoundSetting = localStorage.getItem("isSoundEnabled");
+        return savedSoundSetting ? JSON.parse(savedSoundSetting) : true; // Default to true
+    });
+
+    /**
      * Handles theme color change
      * @param {string} color - New theme color
      */
@@ -73,6 +82,14 @@ function App() {
     };
 
     /**
+     * Handles sound setting change
+     * @param {boolean} newSoundSetting - New sound setting
+     */
+    const handleSoundChange = (newSoundSetting) => {
+        setIsSoundEnabled(newSoundSetting);
+    };
+
+    /**
      * Updates body background color when theme changes
      */
     useEffect(() => {
@@ -90,9 +107,10 @@ function App() {
                                 title="Focus Timer" 
                                 addSession={addSession}
                                 initialTime={customTimer}
+                                isSoundEnabled={isSoundEnabled}
                             />
                         } />
-                        <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} onTimerChange={handleTimerChange} />} />
+                        <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} onTimerChange={handleTimerChange} onSoundChange={handleSoundChange} />} />
                         <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} />
                         <Route path="/achievements" element={<Achievements />} />
                         <Route path="/ranking-system" element={<RankingSystem />} />

@@ -4,7 +4,7 @@ import pageStyles from './PageLayout.module.css';
 import { useNotifications } from './settingsContext';
 import Navbar from "./Navbar";
 
-const Settings = ({ onThemeChange, onTimerChange }) => {
+const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
     const [breakTime, setBreakTime] = useState(0);
     const handleBreak = (breakDuration) => {
         setBreakTime(breakDuration);
@@ -70,6 +70,18 @@ const Settings = ({ onThemeChange, onTimerChange }) => {
 
         onTimerChange(totalSeconds); // Pass the custom time to the parent component
         alert("Timer settings saved!");
+    };
+
+    const [isSoundEnabled, setIsSoundEnabled] = useState(() => {
+        const savedSoundSetting = localStorage.getItem("isSoundEnabled");
+        return savedSoundSetting ? JSON.parse(savedSoundSetting) : true; // Default to true
+    });
+
+    const handleSoundToggle = () => {
+        const newSoundSetting = !isSoundEnabled;
+        setIsSoundEnabled(newSoundSetting);
+        localStorage.setItem("isSoundEnabled", JSON.stringify(newSoundSetting));
+        onSoundChange(newSoundSetting);
     };
 
     return (
@@ -142,6 +154,17 @@ const Settings = ({ onThemeChange, onTimerChange }) => {
                                 />
                             </div>
                             <button onClick={handleSave}>Save Timer</button>
+                        </div>
+
+                        <div className={styles.settingItem}>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={isSoundEnabled}
+                                    onChange={handleSoundToggle}
+                                />
+                                Enable Sound
+                            </label>
                         </div>
                     </div>
                 </div>
