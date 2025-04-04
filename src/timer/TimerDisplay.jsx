@@ -4,9 +4,18 @@ import timerStyles from './TimerDisplay.module.css';
 import Navbar from "../settings/Navbar";
 
 const TimerDisplay = ({ title, initialTime }) => {
-    const [time, setTime] = useState(initialTime); // Use the initial time from props
+    const [time, setTime] = useState(initialTime); // Timer duration
     const [isRunning, setIsRunning] = useState(false);
-    const [streak, setStreak] = useState(0);
+    const [streak, setStreak] = useState(() => {
+        // Load streak from localStorage or default to 0
+        const savedStreak = localStorage.getItem("streak");
+        return savedStreak ? parseInt(savedStreak, 10) : 0;
+    });
+    const [lastSessionDate, setLastSessionDate] = useState(() => {
+        // Load last session date from localStorage
+        const savedDate = localStorage.getItem("lastSessionDate");
+        return savedDate ? new Date(savedDate) : null;
+    });
     const [motivationalQuote, setMotivationalQuote] = useState("");
     const [isSoundEnabled, setIsSoundEnabled] = useState(true);
     const [selectedAudio, setSelectedAudio] = useState('/alarm.mp3');
@@ -58,6 +67,32 @@ const TimerDisplay = ({ title, initialTime }) => {
             audio.play();
         }
         alert("Time's up! Great job!");
+
+        // Update streak logic
+        const today = new Date();
+        if (lastSessionDate) {
+            const diffInTime = today.getTime() - lastSessionDate.getTime();
+            const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+
+            if (diffInDays === 1) {
+                // Increment streak if the session is completed the next day
+                const newStreak = streak + 1;
+                setStreak(newStreak);
+                localStorage.setItem("streak", newStreak);
+            } else if (diffInDays > 1) {
+                // Reset streak if more than one day has passed
+                setStreak(1);
+                localStorage.setItem("streak", 1);
+            }
+        } else {
+            // First session, initialize streak
+            setStreak(1);
+            localStorage.setItem("streak", 1);
+        }
+
+        // Save today's date as the last session date
+        setLastSessionDate(today);
+        localStorage.setItem("lastSessionDate", today.toISOString());
     };
 
     const totalTime = initialTime; // Use the initial time for progress calculation
