@@ -2,25 +2,40 @@ import { useState, useEffect } from "react";
 import { useNotifications } from "../settings/settingsContext";
 import { achievements } from "../achievements/achievements";
 
-// Hook to track user analytics
+/**
+ * useAnalytics hook - Tracks user analytics and achievements
+ * @hook
+ * @returns {Object} Hook API
+ * @property {Function} trackSession - Tracks a new session
+ * @property {Function} trackReset - Tracks reset actions
+ * @property {Array} unlockedAchievements - List of unlocked achievement IDs
+ */
 const useAnalytics = () => {
   const { addNotification } = useNotifications();
+  /** @type {[Object, Function]} State tracking user actions */
   const [actions, setActions] = useState({
     startCount: 0,
     totalTime: 0,
     resetUnderThreeMinutes: false,
-  });// State to keep track of user actions
+  });
+  
+  /** @type {[Array, Function]} State tracking unlocked achievements */
   const [unlockedAchievements, setUnlockedAchievements] = useState(() => {
-    // Retrieve achievements from local storage
     const savedAchievements = localStorage.getItem("unlockedAchievements");
     return savedAchievements ? JSON.parse(savedAchievements) : [];
   });
 
+  // Persist achievements to localStorage when they change
   useEffect(() => {
-    // Save achievements to local storage whenever they change
     localStorage.setItem("unlockedAchievements", JSON.stringify(unlockedAchievements));
   }, [unlockedAchievements]);
 
+  /**
+   * Tracks a new session start
+   * @param {Object} session - Session details
+   * @param {string} session.id - Unique session ID
+   * @param {number} [session.duration] - Optional session duration
+   */
   const trackSession = (session = { id: Date.now().toString() }) => {
     addNotification({
       message: `Session started`,
@@ -41,8 +56,8 @@ const useAnalytics = () => {
   };
 
   /**
-   * Function to track a reset action.
-   * @param {number} time - The time at which the reset action occurred.
+   * Tracks a reset action and checks for achievements
+   * @param {number} time - The time at which reset occurred
    */
   const trackReset = (time) => {
     setActions((prevActions) => ({
@@ -54,7 +69,7 @@ const useAnalytics = () => {
   };
 
   /**
-   * Function to check and unlock achievements based on user actions.
+   * Checks and unlocks achievements based on user actions
    */
   const checkAchievements = () => {
     achievements.forEach((achievement) => {

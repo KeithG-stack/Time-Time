@@ -10,14 +10,32 @@ import NotificationDisplay from './settings/NotificationDisplay';
 import Navbar from './settings/Navbar';
 import './App.css';
 
+/**
+ * App - Main application component with routing and state management
+ * @component
+ * @returns {JSX.Element} The root application component
+ */
 function App() {
+    /**
+     * Current theme color state
+     * @type {[string, Function]} 
+     */
     const [themeColor, setThemeColor] = useState('#ffffff');
+    
+    /**
+     * Completed sessions history state
+     * @type {[Array, Function]} 
+     */
     const [sessions, setSessions] = useState(() => {
         const savedSessions = localStorage.getItem("completedSessions");
         return savedSessions ? JSON.parse(savedSessions) : [];
     });
+    
+    /**
+     * Custom timer duration in seconds state
+     * @type {[number, Function]} 
+     */
     const [customTimer, setCustomTimer] = useState(() => {
-        // Load the custom timer from localStorage or default to 25 minutes
         const savedTimer = localStorage.getItem("customTimer");
         if (savedTimer) {
             const { hours, minutes, seconds } = JSON.parse(savedTimer);
@@ -26,10 +44,18 @@ function App() {
         return 25 * 60; // Default to 25 minutes
     });
 
+    /**
+     * Handles theme color change
+     * @param {string} color - New theme color
+     */
     const handleThemeChange = useCallback((color) => {
         setThemeColor(color);
     }, []);
     
+    /**
+     * Adds a new completed session
+     * @param {Object} session - Session details
+     */
     const addSession = useCallback((session) => {
         setSessions(prevSessions => {
             const updatedSessions = [...prevSessions, session];
@@ -38,10 +64,17 @@ function App() {
         });
     }, []);
     
+    /**
+     * Handles timer duration change
+     * @param {number} newTime - New timer duration in seconds
+     */
     const handleTimerChange = (newTime) => {
-        setCustomTimer(newTime); // Update the custom timer duration
+        setCustomTimer(newTime);
     };
 
+    /**
+     * Updates body background color when theme changes
+     */
     useEffect(() => {
         document.body.style.backgroundColor = themeColor;
     }, [themeColor]);

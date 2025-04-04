@@ -3,23 +3,39 @@ import styles from '../settings/PageLayout.module.css';
 import timerStyles from './TimerDisplay.module.css';
 import Navbar from "../settings/Navbar";
 
+/**
+ * TimerDisplay component - A customizable timer with progress tracking and motivational features
+ * @component
+ * @param {Object} props - Component props
+ * @param {string} props.title - The title to display above the timer
+ * @param {number} props.initialTime - Initial time in seconds for the timer
+ * @returns {JSX.Element} The timer display component with controls and progress visualization
+ */
 const TimerDisplay = ({ title, initialTime }) => {
-    const [time, setTime] = useState(initialTime); // Timer duration
+    /** @type {[number, Function]} Current time remaining in seconds */
+    const [time, setTime] = useState(initialTime);
+    /** @type {[boolean, Function]} Whether timer is currently running */
     const [isRunning, setIsRunning] = useState(false);
+    /** @type {[number, Function]} Current streak count of consecutive days with sessions */
     const [streak, setStreak] = useState(() => {
         // Load streak from localStorage or default to 0
         const savedStreak = localStorage.getItem("streak");
         return savedStreak ? parseInt(savedStreak, 10) : 0;
     });
+    /** @type {[Date|null, Function]} Date of last completed session */
     const [lastSessionDate, setLastSessionDate] = useState(() => {
         // Load last session date from localStorage
         const savedDate = localStorage.getItem("lastSessionDate");
         return savedDate ? new Date(savedDate) : null;
     });
+    /** @type {[string, Function]} Current motivational quote */
     const [motivationalQuote, setMotivationalQuote] = useState("");
+    /** @type {[boolean, Function]} Whether sound effects are enabled */
     const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+    /** @type {[string, Function]} Selected audio file path for timer completion */
     const [selectedAudio, setSelectedAudio] = useState('/alarm.mp3');
 
+    /** Array of motivational quotes to display */
     const motivationalQuotes = useMemo(() => [
         "The secret of getting ahead is getting started.",
         "Don't watch the clock; do what it takes. Keep going.",
@@ -31,10 +47,12 @@ const TimerDisplay = ({ title, initialTime }) => {
         "Small steps every day lead to big achievements."
     ], []);
 
+    // Set random motivational quote on mount
     useEffect(() => {
         setMotivationalQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]);
     }, [motivationalQuotes]);
 
+    // Timer countdown effect
     useEffect(() => {
         let interval;
         if (isRunning && time > 0) {
@@ -47,19 +65,34 @@ const TimerDisplay = ({ title, initialTime }) => {
         return () => clearInterval(interval);
     }, [isRunning, time]);
 
+    /**
+     * Starts the timer countdown
+     */
     const handleStart = () => {
         setIsRunning(true);
     };
 
+    /**
+     * Pauses the timer countdown
+     */
     const handlePause = () => {
         setIsRunning(false);
     };
 
+    /**
+     * Resets the timer to initial time
+     */
     const handleReset = () => {
         setIsRunning(false);
-        setTime(initialTime); // Reset to the initial time from props
+        setTime(initialTime);
     };
 
+    /**
+     * Handles timer completion logic including:
+     * - Playing completion sound
+     * - Updating streak counter
+     * - Saving session data
+     */
     const handleTimerComplete = () => {
         setIsRunning(false);
         if (isSoundEnabled) {
@@ -95,7 +128,7 @@ const TimerDisplay = ({ title, initialTime }) => {
         localStorage.setItem("lastSessionDate", today.toISOString());
     };
 
-    const totalTime = initialTime; // Use the initial time for progress calculation
+    const totalTime = initialTime;
     const progress = totalTime > 0 ? (time / totalTime) * 100 : 0;
 
     return (
