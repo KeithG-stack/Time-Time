@@ -46,14 +46,6 @@ const Navbar = () => {
                         Achievements
                     </NavLink>
                 </li>
-                <li>
-                    <NavLink
-                        to="/task"
-                        className={({ isActive }) => (isActive ? styles.active : "")}
-                    >
-                        Tasks
-                    </NavLink>
-                </li>
             </ul>
         </nav>
     );
