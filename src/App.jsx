@@ -9,6 +9,7 @@ import { NotificationProvider } from './settings/settingsContext';
 import NotificationDisplay from './settings/NotificationDisplay';
 import Navbar from './settings/Navbar';
 import './App.css';
+import Task from './task/Task.jsx';
 
 /**
  * App - Main application component with routing and state management
@@ -114,6 +115,15 @@ function App() {
                         <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} />
                         <Route path="/achievements" element={<Achievements />} />
                         <Route path="/ranking-system" element={<RankingSystem />} />
+                        <Route 
+                            path="/task" 
+                            element={
+                                <> 
+                                    {console.log('Rendering Task component')}
+                                    <Task />
+                                </>
+                            } 
+                        />
                     </Routes>
                     <NotificationDisplay />
                 </div>

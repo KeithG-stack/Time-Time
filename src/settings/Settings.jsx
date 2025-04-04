@@ -24,18 +24,31 @@ const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
     };
 
     const handlePlanSession = () => {
-        const sessionDate = new Date(sessionTime);
-        const now = new Date();
-        const timeUntilSession = sessionDate - now;
-
-        if (timeUntilSession > 0) {
-            setTimeout(() => {
-                addNotification({ message: 'Thank You for Planning with us', type: 'info' });
-            }, timeUntilSession - 5 * 60 * 1000);
-            addNotification({ message: 'Session planned successfully!', type: 'success' });
-        } else {
-            addNotification({ message: 'Please select a future time for your session.', type: 'error' });
+        if (!sessionTime) {
+            addNotification({ message: 'Please select a date and time', type: 'error' });
+            return;
         }
+        
+        const taskDescription = document.getElementById('taskDescription').value;
+        
+        if (!taskDescription) {
+            addNotification({ message: 'Please enter a task description', type: 'error' });
+            return;
+        }
+        
+        const plannedSessions = JSON.parse(localStorage.getItem('plannedSessions') || '[]');
+        
+        plannedSessions.push({
+            dateTime: sessionTime,
+            task: taskDescription,
+            completed: false,
+            completedAt: null
+        });
+        
+        localStorage.setItem('plannedSessions', JSON.stringify(plannedSessions));
+        addNotification({ message: 'Session planned successfully!', type: 'success' });
+        setSessionTime('');
+        document.getElementById('taskDescription').value = '';
     };
 
     const [customHours, setCustomHours] = useState(0);
@@ -119,6 +132,12 @@ const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
                                     id="sessionTime"
                                     value={sessionTime}
                                     onChange={handleSessionTimeChange}
+                                />
+                                <input
+                                    type="text"
+                                    id="taskDescription"
+                                    placeholder="Task description"
+                                    className={styles.taskInput}
                                 />
                                 <button onClick={handlePlanSession}>Plan Session</button>
                             </div>
