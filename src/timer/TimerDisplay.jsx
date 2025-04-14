@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import styles from '../settings/PageLayout.module.css';
 import timerStyles from './TimerDisplay.module.css';
 import Navbar from "../settings/Navbar";
-
+import useAnalytics from '../hooks/Analytics';
 /**
  * TimerDisplay component - A customizable timer with progress tracking and motivational features
  * @component
@@ -13,6 +13,7 @@ import Navbar from "../settings/Navbar";
  * @returns {JSX.Element} The timer display component with controls and progress visualization
  */
 const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
+    const { trackSession, trackReset, productivityScore } = useAnalytics();
     const [time, setTime] = useState(initialTime);
     const [isRunning, setIsRunning] = useState(false);
     const [streak, setStreak] = useState(() => {
@@ -55,6 +56,11 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
 
     const handleStart = () => {
         setIsRunning(true);
+        trackSession({ 
+            id: Date.now().toString(), 
+            duration: initialTime,
+            dateTime: new Date().toISOString()
+        });
     };
 
     const handlePause = () => {
@@ -64,6 +70,7 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
     const handleReset = () => {
         setIsRunning(false);
         setTime(initialTime);
+        trackReset(time);
     };
 
     const handleTimerComplete = () => {
@@ -110,6 +117,11 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
                     <div className={timerStyles.time}>
                         {new Date(time * 1000).toISOString().substr(11, 8)}
                     </div>
+
+                    <div>
+                <h3>Analytics</h3>
+                <p>Productivity Score: {productivityScore}%</p>
+            </div>
 
                     <div className={timerStyles.progressBarContainer}>
                         <div
