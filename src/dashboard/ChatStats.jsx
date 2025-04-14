@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import CompletedSessionsChart from "../dashboard/CompleteSessionsChart";
-import Navbar from "../settings/Navbar"; // Import the Navbar component
-import styles from "../settings/PageLayout.module.css"; // Import shared layout styles
-import chartStyles from "./ChatStats.module.css"; // Import chart-specific styles
+import Navbar from "../settings/Navbar";
+import styles from "../settings/PageLayout.module.css";
+import chartStyles from "./ChatStats.module.css";
 
 const ChartStats = ({ sessions }) => {
     const [view, setView] = useState("daily");
 
     return (
         <>
-            <Navbar /> {/* Include the Navbar */}
+            <Navbar />
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>Chart Stats</h1>
@@ -34,6 +34,12 @@ const ChartStats = ({ sessions }) => {
                             onClick={() => setView("monthly")}
                         >
                             Monthly
+                        </button>
+                        <button
+                            className={`${chartStyles.button} ${view === "yearly" ? chartStyles.active : ""}`}
+                            onClick={() => setView("yearly")}
+                        >
+                            Yearly
                         </button>
                     </div>
 

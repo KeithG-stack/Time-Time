@@ -1,6 +1,7 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Button } from '@mui/material'; // Or your preferred UI library
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -9,7 +10,7 @@ const CompletedSessionsChart = ({ sessions, view }) => {
     const groupSessionsByView = (sessions, view) => {
         const grouped = {};
         sessions.forEach((session) => {
-            const date = new Date(session.startTime);
+            const date = new Date(session.startTime || session.dateTime); // Handle both properties
             let key;
             if (view === 'daily') {
                 key = date.toLocaleDateString(); // Group by day
@@ -18,6 +19,8 @@ const CompletedSessionsChart = ({ sessions, view }) => {
                 key = weekStart.toLocaleDateString();
             } else if (view === 'monthly') {
                 key = `${date.getMonth() + 1}/${date.getFullYear()}`; // Group by month
+            } else if (view === 'yearly') {
+                key = date.getFullYear().toString(); // Group by year
             }
             grouped[key] = (grouped[key] || 0) + 1;
         });
@@ -54,7 +57,36 @@ const CompletedSessionsChart = ({ sessions, view }) => {
         },
     };
 
-    return <Line data={data} options={options} />;
+    const handleDownloadChartData = () => {
+        // Prepare CSV content
+        const csvContent = [
+            ['Date', 'Sessions'],
+            ...labels.map((label, index) => [label, dataPoints[index]])
+        ].map(e => e.join(',')).join('\n');
+
+        // Create download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `sessions_${view}_data.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    return (
+        <div>
+            <Line data={data} options={options} />
+            <Button 
+                variant="contained" 
+                onClick={handleDownloadChartData}
+                style={{ marginTop: '20px' }}
+            >
+                Download {view} Data as CSV
+            </Button>
+        </div>
+    );
 };
 
 export default CompletedSessionsChart;
