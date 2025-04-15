@@ -3,6 +3,7 @@ import styles from '../settings/PageLayout.module.css';
 import timerStyles from './TimerDisplay.module.css';
 import Navbar from "../settings/Navbar";
 import useAnalytics from '../hooks/Analytics';
+
 /**
  * TimerDisplay component - A customizable timer with progress tracking and motivational features
  * @component
@@ -44,6 +45,7 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
 
     useEffect(() => {
         let interval;
+
         if (isRunning && time > 0) {
             interval = setInterval(() => {
                 setTime((prevTime) => prevTime - 1);
@@ -51,7 +53,8 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
         } else if (time === 0) {
             handleTimerComplete();
         }
-        return () => clearInterval(interval);
+
+        return () => clearInterval(interval); // Clear the interval on cleanup
     }, [isRunning, time]);
 
     const handleStart = () => {
@@ -119,9 +122,9 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
                     </div>
 
                     <div>
-                <h3>Analytics</h3>
-                <p>Productivity Score: {productivityScore}%</p>
-            </div>
+                        <h3>Analytics</h3>
+                        <p>Productivity Score: {productivityScore}%</p>
+                    </div>
 
                     <div className={timerStyles.progressBarContainer}>
                         <div

@@ -10,7 +10,7 @@ import NotificationDisplay from './settings/NotificationDisplay';
 import Navbar from './settings/Navbar';
 import './App.css';
 import Task from './task/Task.jsx';
-
+import { ThemeProvider } from './hooks/ThemeContext.jsx';
 /**
  * App - Main application component with routing and state management
  * @component
@@ -98,37 +98,39 @@ function App() {
     }, [themeColor]);
 
     return (
-        <NotificationProvider>
-            <Router>
-                <Navbar />
-                <div>
-                    <Routes>
-                        <Route path="/" element={
-                            <TimerDisplay 
-                                title="Focus Timer" 
-                                addSession={addSession}
-                                initialTime={customTimer}
-                                isSoundEnabled={isSoundEnabled}
+        <ThemeProvider>  
+            <NotificationProvider>
+                <Router>
+                    <Navbar />
+                    <div>
+                        <Routes>
+                            <Route path="/" element={
+                                <TimerDisplay 
+                                    title="Focus Timer" 
+                                    addSession={addSession}
+                                    initialTime={customTimer}
+                                    isSoundEnabled={isSoundEnabled}
+                                />
+                            } />
+                            <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} onTimerChange={handleTimerChange} onSoundChange={handleSoundChange} />} />
+                            <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} />
+                            <Route path="/achievements" element={<Achievements />} />
+                            <Route path="/ranking-system" element={<RankingSystem />} />
+                            <Route 
+                                path="/task" 
+                                element={
+                                    <> 
+                                        {console.log('Rendering Task component')}
+                                        <Task />
+                                    </>
+                                } 
                             />
-                        } />
-                        <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} onTimerChange={handleTimerChange} onSoundChange={handleSoundChange} />} />
-                        <Route path="/chart-stats" element={<ChartStats sessions={sessions} />} />
-                        <Route path="/achievements" element={<Achievements />} />
-                        <Route path="/ranking-system" element={<RankingSystem />} />
-                        <Route 
-                            path="/task" 
-                            element={
-                                <> 
-                                    {console.log('Rendering Task component')}
-                                    <Task />
-                                </>
-                            } 
-                        />
-                    </Routes>
-                    <NotificationDisplay />
-                </div>
-            </Router>
-        </NotificationProvider>
+                        </Routes>
+                        <NotificationDisplay />
+                    </div>
+                </Router>
+            </NotificationProvider>
+        </ThemeProvider>
     );
 }
 

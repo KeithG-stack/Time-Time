@@ -3,13 +3,16 @@ import styles from './Settings.module.css';
 import pageStyles from './PageLayout.module.css';
 import { useNotifications } from './settingsContext';
 import Navbar from "./Navbar";
-
+import { useTheme } from '../hooks/ThemeContext';
 const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
+    const { theme, toggleTheme } = useTheme(); // Use the theme context
+
     const [breakTime, setBreakTime] = useState(0);
     const handleBreak = (breakDuration) => {
         setBreakTime(breakDuration);
         addNotification({ message: `Break started for ${breakDuration / 60} minutes`, type: 'success' });
     };
+
     const [themeColor, setThemeColor] = useState('#ffffff');
     const [sessionTime, setSessionTime] = useState('');
     const { addNotification } = useNotifications();
@@ -103,7 +106,8 @@ const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
             <div className={pageStyles.pageContainer}>
                 <div className={pageStyles.pageContent}>
                     <h1 className={pageStyles.pageTitle}>Settings</h1>
-                    
+
+
                     <div className={styles.settingGroup}>
                         <div className={styles.settingItem}>
                             <label htmlFor="themeColor">Theme Color:</label>
@@ -172,7 +176,9 @@ const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
                                     min="0"
                                 />
                             </div>
-                            <button onClick={handleSave}>Save Timer</button>
+                            <div className={styles.buttonContainer}>
+                                <button onClick={handleSave}>Save Timer</button>
+                            </div>
                         </div>
 
                         <div className={styles.settingItem}>
