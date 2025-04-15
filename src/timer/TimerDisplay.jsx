@@ -111,7 +111,7 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
 
     return (
         <>
-            <Navbar />
+            
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>{title}</h1>

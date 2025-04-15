@@ -3,12 +3,13 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    // Try to get saved theme from localStorage, default to 'light'
+    return localStorage.getItem('theme') || 'light';
+  });
 
   useEffect(() => {
-    // Apply theme class to body element
     document.body.className = theme;
-    // Save to localStorage
     localStorage.setItem('theme', theme);
   }, [theme]);
 
@@ -23,4 +24,10 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+};

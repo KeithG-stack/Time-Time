@@ -7,7 +7,7 @@ import Navbar from "../settings/Navbar"; // Import the Navbar component
 const RankingSystem = () => {
     return (
         <>
-            <Navbar /> {/* Include the Navbar component */}
+            
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>Ranking System</h1>

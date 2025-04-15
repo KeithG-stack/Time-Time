@@ -45,7 +45,6 @@ export default function Task() {
 
     return (
         <>
-            <Navbar />
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>Planned Tasks</h1>

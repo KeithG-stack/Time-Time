@@ -45,7 +45,7 @@ const Achievements = () => {
 
     return (
         <>
-            <Navbar />
+           
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>Achievements</h1>

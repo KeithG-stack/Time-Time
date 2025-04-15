@@ -1,15 +1,9 @@
 .pageContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 60px; /* Add padding to prevent overlap with the navbar */
-    height: 100vh; /* Full height of the viewport */
-    width: 100vw; /* Full width of the viewport */
-    background-color: #f0f0f0; /* Background color */
-    padding: 20px;
-    box-sizing: border-box;
-    position: relative;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    padding-top: 70px; /* Add padding equal to navbar height */
+    min-height: 100vh;
 }
 
 .pageTitle {
@@ -19,13 +13,10 @@
 }
 
 .pageContent {
-    width: 100%;
-    max-width: 800px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
 }
+
 
 .pageContent h2 {
     margin-top: 0;

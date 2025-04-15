@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './Settings.module.css';
 import pageStyles from './PageLayout.module.css';
 import { useNotifications } from './settingsContext';
-import Navbar from "./Navbar";
 import { useTheme } from '../hooks/ThemeContext';
+
 const Settings = ({ onTimerChange, onSoundChange }) => {
     const { theme, toggleTheme } = useTheme(); // Use the theme context
 
@@ -95,100 +95,97 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
     };
 
     return (
-        <>
-            <Navbar />
-            <div className={pageStyles.pageContainer}>
-                <div className={pageStyles.pageContent}>
-                    <h1 className={pageStyles.pageTitle}>Settings</h1>
+        <div className={pageStyles.pageContainer}>
+            <div className={pageStyles.pageContent}>
+                <h1 className={pageStyles.pageTitle}>Settings</h1>
+
+                <div className={styles.settingGroup}>
+                    {/* Replace theme color picker with theme toggle */}
+                    <div className={styles.settingItem}>
+                        <label htmlFor="themeToggle">Dark Mode:</label>
+                        <input
+                            type="checkbox"
+                            id="themeToggle"
+                            checked={theme === 'dark'}
+                            onChange={toggleTheme}
+                        />
+                    </div>
+
+                    <div className={styles.breakButtons}>
+                        <h3>Break Timer</h3>
+                        <div className={styles.buttonGroup}>
+                            <button onClick={() => handleBreak(5 * 60)}>5 min Break</button>
+                            <button onClick={() => handleBreak(10 * 60)}>10 min Break</button>
+                            <button onClick={() => handleBreak(15 * 60)}>15 min Break</button>
+                        </div>
+                    </div>
+
+                    <div className={styles.settingItem}>
+                        <h3>Plan Next Session</h3>
+                        <div className={styles.planSession}>
+                            <input
+                                type="datetime-local"
+                                id="sessionTime"
+                                value={sessionTime}
+                                onChange={handleSessionTimeChange}
+                            />
+                            <input
+                                type="text"
+                                id="taskDescription"
+                                placeholder="Task description"
+                                className={styles.taskInput}
+                            />
+                            <button onClick={handlePlanSession}>Plan Session</button>
+                        </div>
+                    </div>
 
                     <div className={styles.settingGroup}>
-                        {/* Replace theme color picker with theme toggle */}
+                        <h2>Customize Timer</h2>
                         <div className={styles.settingItem}>
-                            <label htmlFor="themeToggle">Dark Mode:</label>
+                            <label>Hours:</label>
                             <input
-                                type="checkbox"
-                                id="themeToggle"
-                                checked={theme === 'dark'}
-                                onChange={toggleTheme}
+                                type="number"
+                                value={customHours}
+                                onChange={(e) => setCustomHours(parseInt(e.target.value, 10) || 0)}
+                                min="0"
                             />
                         </div>
-
-                        <div className={styles.breakButtons}>
-                            <h3>Break Timer</h3>
-                            <div className={styles.buttonGroup}>
-                                <button onClick={() => handleBreak(5 * 60)}>5 min Break</button>
-                                <button onClick={() => handleBreak(10 * 60)}>10 min Break</button>
-                                <button onClick={() => handleBreak(15 * 60)}>15 min Break</button>
-                            </div>
-                        </div>
-
                         <div className={styles.settingItem}>
-                            <h3>Plan Next Session</h3>
-                            <div className={styles.planSession}>
-                                <input
-                                    type="datetime-local"
-                                    id="sessionTime"
-                                    value={sessionTime}
-                                    onChange={handleSessionTimeChange}
-                                />
-                                <input
-                                    type="text"
-                                    id="taskDescription"
-                                    placeholder="Task description"
-                                    className={styles.taskInput}
-                                />
-                                <button onClick={handlePlanSession}>Plan Session</button>
-                            </div>
+                            <label>Minutes:</label>
+                            <input
+                                type="number"
+                                value={customMinutes}
+                                onChange={(e) => setCustomMinutes(parseInt(e.target.value, 10) || 0)}
+                                min="0"
+                            />
                         </div>
-
-                        <div className={styles.settingGroup}>
-                            <h2>Customize Timer</h2>
-                            <div className={styles.settingItem}>
-                                <label>Hours:</label>
-                                <input
-                                    type="number"
-                                    value={customHours}
-                                    onChange={(e) => setCustomHours(parseInt(e.target.value, 10) || 0)}
-                                    min="0"
-                                />
-                            </div>
-                            <div className={styles.settingItem}>
-                                <label>Minutes:</label>
-                                <input
-                                    type="number"
-                                    value={customMinutes}
-                                    onChange={(e) => setCustomMinutes(parseInt(e.target.value, 10) || 0)}
-                                    min="0"
-                                />
-                            </div>
-                            <div className={styles.settingItem}>
-                                <label>Seconds:</label>
-                                <input
-                                    type="number"
-                                    value={customSeconds}
-                                    onChange={(e) => setCustomSeconds(parseInt(e.target.value, 10) || 0)}
-                                    min="0"
-                                />
-                            </div>
-                            <div className={styles.buttonContainer}>
-                                <button onClick={handleSave}>Save Timer</button>
-                            </div>
-                        </div>
-
                         <div className={styles.settingItem}>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={isSoundEnabled}
-                                    onChange={handleSoundToggle}
-                                />
-                                Enable Sound
-                            </label>
+                            <label>Seconds:</label>
+                            <input
+                                type="number"
+                                value={customSeconds}
+                                onChange={(e) => setCustomSeconds(parseInt(e.target.value, 10) || 0)}
+                                min="0"
+                            />
                         </div>
+                        <div className={styles.buttonContainer}>
+                            <button onClick={handleSave}>Save Timer</button>
+                        </div>
+                    </div>
+
+                    <div className={styles.settingItem}>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={isSoundEnabled}
+                                onChange={handleSoundToggle}
+                            />
+                            Enable Sound
+                        </label>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

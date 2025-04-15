@@ -224,3 +224,34 @@ button {
     background-color: var(--accent-color);
     color: white;
   }
+
+  /* Add these at the end of your CSS file */
+.settings {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.settingGroup {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.settingItem label {
+    color: var(--text-primary);
+}
+
+.settingItem input:not([type="checkbox"]) {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Ensure buttons maintain their colors in dark mode */
+.buttonContainer button,
+.breakButtons button,
+.planSession button {
+    background-color: var(--accent-color);
+    color: white;
+}

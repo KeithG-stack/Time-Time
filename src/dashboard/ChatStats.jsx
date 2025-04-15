@@ -9,7 +9,7 @@ const ChartStats = ({ sessions }) => {
 
     return (
         <>
-            <Navbar />
+            
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>Chart Stats</h1>

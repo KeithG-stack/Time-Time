@@ -35,13 +35,8 @@
     border-radius: 5px;
 }
 
-.navbar li a:hover {
-    background-color: #555;
-    transform: scale(1.05); /* Add a slight zoom effect */
-}
-
-.navbar li a.active {
-    background-color: #007bff;
+.navbar a:hover, 
+.navbar a.active {
+    background-color: var(--accent-color);
     color: white;
-    border-radius: 5px;
 }
