@@ -77,10 +77,11 @@
     justify-content: center;
 }
 
+/* Make ALL break buttons blue */
 .breakButtons button {
     padding: 10px 15px;
     font-size: 0.9rem;
-    background-color: #007bff;
+    background-color: #007bff; /* Blue color */
     color: white;
     border: none;
     border-radius: 5px;
@@ -89,7 +90,7 @@
 }
 
 .breakButtons button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
 .planSession {
@@ -109,10 +110,11 @@
     max-width: 300px;
 }
 
+/* Keep Plan Session button GREEN */
 .planSession button {
     padding: 10px 15px;
     font-size: 0.9rem;
-    background-color: #28a745;
+    background-color: #28a745; /* Green color */
     color: white;
     border: none;
     border-radius: 5px;
@@ -121,13 +123,14 @@
 }
 
 .planSession button:hover {
-    background-color: #218838;
+    background-color: #218838; /* Darker green on hover */
 }
 
+/* Make Save Timer button blue */
 .buttonContainer button {
     padding: 10px 15px;
     font-size: 1rem;
-    background-color: #007bff; /* Force blue background */
+    background-color: #007bff; /* Blue background */
     color: white;
     border: none;
     border-radius: 5px;
@@ -139,16 +142,20 @@
     background-color: #0056b3; /* Darker blue on hover */
     transform: scale(1.05);
 }
+
+/* Default button style - blue for all other buttons */
 button {
     padding: 10px 15px;
     font-size: 1rem;
-    background-color: #007bff; /* Consistent background color */
+    background-color: #007bff; /* Blue background */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer; /* Allow interaction */
     transition: background-color 0.3s ease, transform 0.2s ease; /* Add hover effects */
 }
+
+/* Override for Plan Session button is already defined above */
 
 @media (max-width: 768px) {
     .settings {
@@ -220,9 +227,19 @@ button {
     color: var(--text-primary);
   }
   
+  /* Modified to ensure all buttons are blue EXCEPT .planSession button */
   button {
-    background-color: var(--accent-color);
+    background-color: #007bff; /* Explicitly blue instead of var(--accent-color) */
     color: white;
+  }
+
+  /* Keep Plan Session button GREEN - this needs to be after the general button style */
+  .planSession button {
+    background-color: #28a745 !important; /* Use !important to override any other styles */
+  }
+  
+  .planSession button:hover {
+    background-color: #218838 !important; /* Darker green on hover */
   }
 
   /* Add these at the end of your CSS file */
@@ -248,10 +265,15 @@ button {
     border-color: var(--border-color);
 }
 
-/* Ensure buttons maintain their colors in dark mode */
+/* Override theme variables to ensure proper colors */
 .buttonContainer button,
-.breakButtons button,
+.breakButtons button {
+    background-color: #007bff; /* Force blue */
+    color: white;
+}
+
+/* Final override for Plan Session button to ensure it stays green */
 .planSession button {
-    background-color: var(--accent-color);
+    background-color: #28a745 !important; /* Force green with !important */
     color: white;
 }
