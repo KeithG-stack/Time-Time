@@ -25,38 +25,36 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     overflow: visible; /* Ensure content inside is not clipped */
 }
-
-.settingItem {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 500px;
-    gap: 10px;
-}
-
-.settingItem label {
-    font-weight: bold;
-    font-size: 1rem;
-    flex: 1; /* Allow labels to take up space */
-}
-
-.settingItem input {
-    flex: 2; /* Allow inputs to take up more space */
-    padding: 5px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.settingItem input[type="color"] {
-    width: 50px;
-    height: 30px;
-    padding: 0;
-    border: none;
+/* Add this to your existing CSS */
+.settingItem input[type="checkbox"] {
+    width: 40px;
+    height: 20px;
+    appearance: none;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    position: relative;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.settingItem input[type="checkbox"]:checked {
+    background-color: #007bff;
+}
+
+.settingItem input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+}
+
+.settingItem input[type="checkbox"]:checked::after {
+    transform: translateX(20px);
 }
 
 .breakButtons {

@@ -4,7 +4,7 @@ import pageStyles from './PageLayout.module.css';
 import { useNotifications } from './settingsContext';
 import Navbar from "./Navbar";
 import { useTheme } from '../hooks/ThemeContext';
-const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
+const Settings = ({ onTimerChange, onSoundChange }) => {
     const { theme, toggleTheme } = useTheme(); // Use the theme context
 
     const [breakTime, setBreakTime] = useState(0);
@@ -13,14 +13,8 @@ const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
         addNotification({ message: `Break started for ${breakDuration / 60} minutes`, type: 'success' });
     };
 
-    const [themeColor, setThemeColor] = useState('#ffffff');
     const [sessionTime, setSessionTime] = useState('');
     const { addNotification } = useNotifications();
-
-    const handleThemeColorChange = (e) => {
-        setThemeColor(e.target.value);
-        onThemeChange(e.target.value);
-    };
 
     const handleSessionTimeChange = (e) => {
         setSessionTime(e.target.value);
@@ -107,15 +101,15 @@ const Settings = ({ onThemeChange, onTimerChange, onSoundChange }) => {
                 <div className={pageStyles.pageContent}>
                     <h1 className={pageStyles.pageTitle}>Settings</h1>
 
-
                     <div className={styles.settingGroup}>
+                        {/* Replace theme color picker with theme toggle */}
                         <div className={styles.settingItem}>
-                            <label htmlFor="themeColor">Theme Color:</label>
+                            <label htmlFor="themeToggle">Dark Mode:</label>
                             <input
-                                type="color"
-                                id="themeColor"
-                                value={themeColor}
-                                onChange={handleThemeColorChange}
+                                type="checkbox"
+                                id="themeToggle"
+                                checked={theme === 'dark'}
+                                onChange={toggleTheme}
                             />
                         </div>
 
