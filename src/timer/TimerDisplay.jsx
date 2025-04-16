@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import styles from '../settings/PageLayout.module.css';
 import timerStyles from './TimerDisplay.module.css';
-import Navbar from "../settings/Navbar";
 import useAnalytics from '../hooks/Analytics';
+import { useNotifications } from '../settings/settingsContext';
 
 const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
     const { trackSession, trackReset, productivityScore } = useAnalytics();
+    const { addNotification } = useNotifications();
     const [time, setTime] = useState(initialTime);
     const [isRunning, setIsRunning] = useState(false);
     const [streak, setStreak] = useState(() => {
@@ -66,6 +67,14 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
         setUserActions(newActions);
         localStorage.setItem("userActions", JSON.stringify(newActions));
         
+        // Check for first time start achievement
+        if (newActions.startCount === 1) {
+            addNotification({
+                message: 'Achievement Unlocked: Start the timer for the first time!',
+                type: 'success'
+            });
+        }
+        
         trackSession({ 
             id: Date.now().toString(), 
             duration: initialTime,
@@ -88,6 +97,12 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
             };
             setUserActions(newActions);
             localStorage.setItem("userActions", JSON.stringify(newActions));
+            
+            // Show achievement notification
+            addNotification({
+                message: 'Achievement Unlocked: Reset the timer under 3 minutes!',
+                type: 'success'
+            });
         }
         
         trackReset(time);
@@ -128,40 +143,38 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
     const progress = totalTime > 0 ? (time / totalTime) * 100 : 0;
 
     return (
-        <>
-            <div className={styles.pageContainer}>
-                <div className={styles.pageContent}>
-                    <h1 className={styles.pageTitle}>{title}</h1>
-                    <p className={timerStyles.streakText}>Current Streak: {streak} days</p>
+        <div className={styles.pageContainer}>
+            <div className={styles.pageContent}>
+                <h1 className={styles.pageTitle}>{title}</h1>
+                <p className={timerStyles.streakText}>Current Streak: {streak} days</p>
 
-                    <div className={timerStyles.time}>
-                        {new Date(time * 1000).toISOString().substr(11, 8)}
-                    </div>
+                <div className={timerStyles.time}>
+                    {new Date(time * 1000).toISOString().substr(11, 8)}
+                </div>
 
-                    <div>
-                        <h3>Analytics</h3>
-                        <p>Productivity Score: {productivityScore}%</p>
-                    </div>
+                <div>
+                    <h3>Analytics</h3>
+                    <p>Productivity Score: {productivityScore}%</p>
+                </div>
 
-                    <div className={timerStyles.progressBarContainer}>
-                        <div
-                            className={timerStyles.progressBar}
-                            style={{ width: `${progress}%` }}
-                        />
-                    </div>
+                <div className={timerStyles.progressBarContainer}>
+                    <div
+                        className={timerStyles.progressBar}
+                        style={{ width: `${progress}%` }}
+                    />
+                </div>
 
-                    <div className={timerStyles.controls}>
-                        <button onClick={handleStart} disabled={isRunning}>Start</button>
-                        <button onClick={handlePause} disabled={!isRunning}>Pause</button>
-                        <button onClick={handleReset}>Reset</button>
-                    </div>
+                <div className={timerStyles.controls}>
+                    <button onClick={handleStart} disabled={isRunning}>Start</button>
+                    <button onClick={handlePause} disabled={!isRunning}>Pause</button>
+                    <button onClick={handleReset}>Reset</button>
+                </div>
 
-                    <div className={timerStyles.quote}>
-                        {motivationalQuote}
-                    </div>
+                <div className={timerStyles.quote}>
+                    {motivationalQuote}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

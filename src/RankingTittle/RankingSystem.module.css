@@ -108,3 +108,98 @@
         }
     }
 }
+/* Existing styles remain the same, add these at the end */
+
+/* Dark mode styles */
+.dark {
+    background-color: var(--bg-secondary, #1e1e1e);
+    color: var(--text-primary, #f8f9fa);
+}
+
+.dark h2 {
+    color: var(--text-primary, #f8f9fa);
+    border-bottom-color: var(--border-color, #343a40);
+}
+
+.darkItem {
+    background-color: var(--bg-secondary, #1e1e1e);
+    color: var(--text-primary, #f8f9fa);
+}
+
+.darkItem:hover {
+    background-color: var(--bg-primary, #121212);
+}
+
+/* Keep all your existing styles below */
+.achievement {
+    margin-bottom: 20px;
+    background-color: var(--bg-secondary, #f8f9fa);
+    border-radius: 8px;
+    padding: 12px 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.achievement h2 {
+    font-size: 1.3rem;
+    margin: 0 0 10px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+    color: var(--text-primary, #212529);
+}
+
+.achievementItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    background-color: var(--bg-primary, #ffffff);
+    transition: transform 0.2s ease;
+}
+
+/* Share Container Styles */
+.shareContainer {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shareContainer h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.shareButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.copyButton {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.copyButton:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Dark mode adjustments for share container */
+.dark .shareContainer {
+    background-color: var(--bg-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
