@@ -4,15 +4,6 @@ import timerStyles from './TimerDisplay.module.css';
 import Navbar from "../settings/Navbar";
 import useAnalytics from '../hooks/Analytics';
 
-/**
- * TimerDisplay component - A customizable timer with progress tracking and motivational features
- * @component
- * @param {Object} props - Component props
- * @param {string} props.title - The title to display above the timer
- * @param {number} props.initialTime - Initial time in seconds for the timer
- * @param {boolean} props.isSoundEnabled - Whether sound effects are enabled
- * @returns {JSX.Element} The timer display component with controls and progress visualization
- */
 const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
     const { trackSession, trackReset, productivityScore } = useAnalytics();
     const [time, setTime] = useState(initialTime);
@@ -24,6 +15,13 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
     const [lastSessionDate, setLastSessionDate] = useState(() => {
         const savedDate = localStorage.getItem("lastSessionDate");
         return savedDate ? new Date(savedDate) : null;
+    });
+    const [userActions, setUserActions] = useState(() => {
+        const savedActions = localStorage.getItem("userActions");
+        return savedActions ? JSON.parse(savedActions) : { 
+            startCount: 0, 
+            resetUnderThreeMinutes: false 
+        };
     });
     const [motivationalQuote, setMotivationalQuote] = useState("");
     const [selectedAudio, setSelectedAudio] = useState('/alarm.mp3');
@@ -54,11 +52,20 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
             handleTimerComplete();
         }
 
-        return () => clearInterval(interval); // Clear the interval on cleanup
+        return () => clearInterval(interval);
     }, [isRunning, time]);
 
     const handleStart = () => {
         setIsRunning(true);
+        
+        // Track achievement progress
+        const newActions = {
+            ...userActions,
+            startCount: userActions.startCount + 1
+        };
+        setUserActions(newActions);
+        localStorage.setItem("userActions", JSON.stringify(newActions));
+        
         trackSession({ 
             id: Date.now().toString(), 
             duration: initialTime,
@@ -72,8 +79,19 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
 
     const handleReset = () => {
         setIsRunning(false);
-        setTime(initialTime);
+        
+        // Track achievement progress if reset under 3 minutes
+        if (time > 0 && time < 180) { // 180 seconds = 3 minutes
+            const newActions = {
+                ...userActions,
+                resetUnderThreeMinutes: true
+            };
+            setUserActions(newActions);
+            localStorage.setItem("userActions", JSON.stringify(newActions));
+        }
+        
         trackReset(time);
+        setTime(initialTime);
     };
 
     const handleTimerComplete = () => {
@@ -111,7 +129,6 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
 
     return (
         <>
-            
             <div className={styles.pageContainer}>
                 <div className={styles.pageContent}>
                     <h1 className={styles.pageTitle}>{title}</h1>

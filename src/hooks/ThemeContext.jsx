@@ -1,21 +1,36 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
+// Create the theme context
 const ThemeContext = createContext();
 
+// Provider component that wraps your app
 export const ThemeProvider = ({ children }) => {
+  // Get initial theme from localStorage or default to 'dark'
   const [theme, setTheme] = useState(() => {
-    // Try to get saved theme from localStorage, default to 'light'
-    return localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme || 'dark'; // Default to dark mode
   });
 
+  // Update the theme in localStorage whenever it changes
   useEffect(() => {
-    document.body.className = theme;
     localStorage.setItem('theme', theme);
+    
+    // Apply theme class to the document body
+    document.body.className = theme;
+    
+    // You can also set a data attribute for CSS selectors
+    document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Function to toggle the theme
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
+
+  // Make all pages start with dark theme on first load
+  useEffect(() => {
+    setTheme('dark');
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -24,10 +39,7 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
+// Custom hook to use the theme context
 export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
+  return useContext(ThemeContext);
 };

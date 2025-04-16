@@ -8,6 +8,7 @@ import RankingSystem from "./RankingTittle/RankingSystem.jsx";
 import { NotificationProvider } from './settings/settingsContext';
 import NotificationDisplay from './settings/NotificationDisplay';
 import Navbar from './settings/Navbar';
+import './hooks/global.css';
 import './App.css';
 import Task from './task/Task.jsx';
 import { ThemeProvider, useTheme } from './hooks/ThemeContext.jsx';

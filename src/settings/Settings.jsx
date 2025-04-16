@@ -95,11 +95,12 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
     };
 
     return (
-        <div className={pageStyles.pageContainer}>
+        // Apply the theme class to the outer container
+        <div className={`${pageStyles.pageContainer} ${styles[theme]}`}>
             <div className={pageStyles.pageContent}>
                 <h1 className={pageStyles.pageTitle}>Settings</h1>
 
-                <div className={styles.settingGroup}>
+                <div className={`${styles.settingGroup} ${styles[theme]}`}>
                     {/* Replace theme color picker with theme toggle */}
                     <div className={styles.settingItem}>
                         <label htmlFor="themeToggle">Dark Mode:</label>
@@ -128,18 +129,19 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
                                 id="sessionTime"
                                 value={sessionTime}
                                 onChange={handleSessionTimeChange}
+                                className={styles[theme]}
                             />
                             <input
                                 type="text"
                                 id="taskDescription"
                                 placeholder="Task description"
-                                className={styles.taskInput}
+                                className={`${styles.taskInput} ${styles[theme]}`}
                             />
                             <button onClick={handlePlanSession}>Plan Session</button>
                         </div>
                     </div>
 
-                    <div className={styles.settingGroup}>
+                    <div className={`${styles.settingGroup} ${styles[theme]}`}>
                         <h2>Customize Timer</h2>
                         <div className={styles.settingItem}>
                             <label>Hours:</label>
@@ -148,6 +150,7 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
                                 value={customHours}
                                 onChange={(e) => setCustomHours(parseInt(e.target.value, 10) || 0)}
                                 min="0"
+                                className={styles[theme]}
                             />
                         </div>
                         <div className={styles.settingItem}>
@@ -157,6 +160,7 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
                                 value={customMinutes}
                                 onChange={(e) => setCustomMinutes(parseInt(e.target.value, 10) || 0)}
                                 min="0"
+                                className={styles[theme]}
                             />
                         </div>
                         <div className={styles.settingItem}>
@@ -166,6 +170,7 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
                                 value={customSeconds}
                                 onChange={(e) => setCustomSeconds(parseInt(e.target.value, 10) || 0)}
                                 min="0"
+                                className={styles[theme]}
                             />
                         </div>
                         <div className={styles.buttonContainer}>

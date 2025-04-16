@@ -1,23 +1,110 @@
 .container {
-    padding: 20px;
+    padding: 10px;
     text-align: center;
+    max-width: 100%;
 }
 
 .achievement {
     margin-bottom: 20px;
+    background-color: var(--bg-secondary, #f8f9fa);
+    border-radius: 8px;
+    padding: 12px 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .achievement h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    font-size: 1.3rem;
+    margin: 0 0 10px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+    color: var(--text-primary, #212529);
 }
 
 .achievement ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
-.achievement li {
-    font-size: 1rem;
-    margin-bottom: 5px;
+.achievementItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    background-color: var(--bg-primary, #ffffff);
+    transition: transform 0.2s ease;
+}
+
+.achievementItem:last-child {
+    margin-bottom: 0;
+}
+
+.achievementItem:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.levelInfo {
+    font-weight: 500;
+}
+
+.rewardInfo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+}
+
+/* Icon styling - to be used with your SVG icons */
+.icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+/* Color classes for bronze, silver, gold */
+.bronze {
+    color: #CD7F32;
+}
+
+.silver {
+    color: #C0C0C0;
+}
+
+.gold {
+    color: #FFD700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .achievementItem {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+    }
+    
+    /* For very small screens */
+    @media (max-width: 480px) {
+        .achievement h2 {
+            font-size: 1.1rem;
+        }
+        
+        .achievementItem {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+        
+        .rewardInfo {
+            align-self: flex-start;
+            margin-left: 10px;
+        }
+    }
 }
