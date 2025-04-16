@@ -6,7 +6,8 @@ import chartStyles from "./ChatStats.module.css";
 
 const ChartStats = ({ sessions }) => {
     const [view, setView] = useState("daily");
-
+// this component displays a chart of completed sessions over time
+    // The view state determines the type of chart to display (daily, weekly, monthly, yearly)
     return (
         <>
             

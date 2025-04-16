@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNotifications } from './settingsContext';
 import styles from './NotificationDisplay.module.css';
-
+// this component is responsible for displaying notifications to the user
 const NotificationDisplay = () => {
     const { notifications, removeNotification } = useNotifications();
 

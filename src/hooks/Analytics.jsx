@@ -4,6 +4,7 @@ import { achievements } from "../achievements/achievements";
 import jsPDF from 'jspdf';
 import { exportToCSV } from '../utilities/exportutils';
 
+// This function calculates the productivity score based on session data.
 const calculateProductivityScore = (sessions) => {
     if (!sessions?.length) return 0;
 
@@ -14,7 +15,7 @@ const calculateProductivityScore = (sessions) => {
     
     return Math.round((averageSessionLength * 0.4 + consistencyScore * 0.3 + durationScore * 0.3) * 100);
 };
-
+// This function calculates the monthly analysis based on session data.
 const getMonthlyAnalysis = (sessions) => {
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -33,7 +34,7 @@ const getMonthlyAnalysis = (sessions) => {
         completedTasks: monthlySessions.filter(s => s.completed).length
     };
 };
-
+// This function calculates the yearly comparison based on session data.
 const getYearlyComparison = (sessions) => {
     const currentYear = new Date().getFullYear();
     const lastYear = currentYear - 1;
@@ -63,7 +64,7 @@ const getYearlyComparison = (sessions) => {
         lastYear: yearlyData[lastYear] || { totalSessions: 0, totalMinutes: 0, completedTasks: 0 }
     };
 };
-
+// This function handles the analytics logic for tracking sessions, achievements, and exporting data.
 const useAnalytics = () => {
     const { addNotification } = useNotifications();
     const [actions, setActions] = useState({
@@ -135,7 +136,7 @@ const useAnalytics = () => {
 
         checkAchievements();
     };
-
+// This function checks if any achievements are unlocked based on the current actions and sessions.
     const checkAchievements = () => {
         achievements.forEach((achievement) => {
             if (achievement.criteria(actions) && !unlockedAchievements.includes(achievement.id)) {
@@ -147,7 +148,8 @@ const useAnalytics = () => {
             }
         });
     };
-
+// This function exports the session data to CSV and generates a PDF report.
+    // It also includes analytics data such as productivity score, monthly analysis, and yearly comparison.
     const exportData = async () => {
         try {
             // Export to CSV
@@ -185,7 +187,8 @@ const useAnalytics = () => {
             });
         }
     };
-
+// This function shares the session data using the Web Share API or copies it to the clipboard if not supported.
+    // It includes the productivity score, monthly analysis, and completed tasks.
     const shareData = async () => {
         try {
             const shareData = {

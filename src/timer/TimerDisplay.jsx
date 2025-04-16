@@ -4,6 +4,8 @@ import timerStyles from './TimerDisplay.module.css';
 import useAnalytics from '../hooks/Analytics';
 import { useNotifications } from '../settings/settingsContext';
 
+// This component displays a timer with start, pause, and reset functionality.
+// It also tracks user actions and achievements, and displays motivational quotes.
 const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
     const { trackSession, trackReset, productivityScore } = useAnalytics();
     const { addNotification } = useNotifications();
@@ -38,6 +40,8 @@ const TimerDisplay = ({ title, initialTime, isSoundEnabled }) => {
         "Small steps every day lead to big achievements."
     ], []);
 
+    // This effect sets a random motivational quote when the component mounts
+    // and whenever the motivationalQuotes array changes.
     useEffect(() => {
         setMotivationalQuote(motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]);
     }, [motivationalQuotes]);

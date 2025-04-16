@@ -21,13 +21,13 @@ import { achievementTypes } from "../RankingTittle/Rank";
 import styles from "../settings/PageLayout.module.css";
 import rankingStyles from "./RankingSystem.module.css";
 import { useTheme } from "../hooks/ThemeContext";
-
+// this component displays the ranking system of the app
 const RankingSystem = () => {
     const { theme } = useTheme();
     const [copied, setCopied] = React.useState(false);
     const shareUrl = window.location.href;
     const title = "Check out my progress in the Productivity App!";
-
+// this function handles the copy to clipboard action
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(shareUrl);
@@ -37,7 +37,7 @@ const RankingSystem = () => {
             console.error('Failed to copy: ', err);
         }
     };
-
+// this function returns the icon for each reward based on its type
     const getRewardIcon = (reward) => {
         if (reward.includes("Badge")) {
             return <Medal 
@@ -70,7 +70,7 @@ const RankingSystem = () => {
         }
         return <Award size={24} />;
     };
-
+// 
     return (
         <div className={`${styles.pageContainer} ${theme}`}>
             <div className={styles.pageContent}>

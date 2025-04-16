@@ -26,6 +26,7 @@ const CompletedSessionsChart = ({ sessions, view }) => {
         });
         return grouped;
     };
+    // Group sessions based on the selected view
 
     const groupedSessions = groupSessionsByView(sessions, view);
     const labels = Object.keys(groupedSessions);
@@ -43,7 +44,7 @@ const CompletedSessionsChart = ({ sessions, view }) => {
             },
         ],
     };
-
+// Set up chart options
     const options = {
         responsive: true,
         plugins: {
@@ -56,7 +57,7 @@ const CompletedSessionsChart = ({ sessions, view }) => {
             },
         },
     };
-
+// Handle CSV download
     const handleDownloadChartData = () => {
         // Prepare CSV content
         const csvContent = [

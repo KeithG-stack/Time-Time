@@ -3,7 +3,7 @@ import styles from './Settings.module.css';
 import pageStyles from './PageLayout.module.css';
 import { useNotifications } from './settingsContext';
 import { useTheme } from '../hooks/ThemeContext';
-
+// this component is responsible for rendering the settings page
 const Settings = ({ onTimerChange, onSoundChange }) => {
     const { theme, toggleTheme } = useTheme(); // Use the theme context
 
@@ -12,14 +12,15 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
         setBreakTime(breakDuration);
         addNotification({ message: `Break started for ${breakDuration / 60} minutes`, type: 'success' });
     };
-
+    // This function handles the break time and sets it in the state
+    // It also adds a notification to inform the user about the break duration
     const [sessionTime, setSessionTime] = useState('');
     const { addNotification } = useNotifications();
 
     const handleSessionTimeChange = (e) => {
         setSessionTime(e.target.value);
     };
-
+    // This function handles the session time change and sets it in the state
     const handlePlanSession = () => {
         if (!sessionTime) {
             addNotification({ message: 'Please select a date and time', type: 'error' });
@@ -41,13 +42,13 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
             completed: false,
             completedAt: null
         });
-        
+        // Save the planned session to localStorage
         localStorage.setItem('plannedSessions', JSON.stringify(plannedSessions));
         addNotification({ message: 'Session planned successfully!', type: 'success' });
         setSessionTime('');
         document.getElementById('taskDescription').value = '';
     };
-
+    // This function handles the planning of a session
     const [customHours, setCustomHours] = useState(0);
     const [customMinutes, setCustomMinutes] = useState(25); // Default to 25 minutes
     const [customSeconds, setCustomSeconds] = useState(0);
@@ -81,12 +82,12 @@ const Settings = ({ onTimerChange, onSoundChange }) => {
         onTimerChange(totalSeconds); // Pass the custom time to the parent component
         alert("Timer settings saved!");
     };
-
+    // This function handles the saving of custom timer settings
     const [isSoundEnabled, setIsSoundEnabled] = useState(() => {
         const savedSoundSetting = localStorage.getItem("isSoundEnabled");
         return savedSoundSetting ? JSON.parse(savedSoundSetting) : true; // Default to true
     });
-
+    // Load sound settings from localStorage when the component mounts
     const handleSoundToggle = () => {
         const newSoundSetting = !isSoundEnabled;
         setIsSoundEnabled(newSoundSetting);

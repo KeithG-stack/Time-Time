@@ -4,13 +4,14 @@ import styles from "../settings/PageLayout.module.css";
 import achievementStyles from "./Achievements.module.css";
 import { useNotifications } from "../settings/settingsContext";
 
+// This component displays a list of achievements and their statuses.
 const getAchievementIcon = (achievement, isUnlocked) => {
     if (!isUnlocked) return '🔒';
     if (achievement.id === 'start_timer_first_time') return '⏱️';
     if (achievement.id === 'reset_under_three_minutes') return '⚡';
     return '🎯';
 };
-
+// This function returns the icon for each achievement based on its status and type.
 const getAchievementDetails = (achievement, userActions) => {
     if (achievement.id === 'start_timer_first_time') {
         return `Times started: ${userActions.startCount}`;
@@ -19,7 +20,7 @@ const getAchievementDetails = (achievement, userActions) => {
     }
     return '';
 };
-
+// This function returns the details for each achievement based on its type and user actions.
 const Achievements = () => {
     const [userActions, setUserActions] = useState({
         startCount: 0,
@@ -56,7 +57,7 @@ const Achievements = () => {
         });
         setPrevUnlocked(newUnlocked);
     }, [userActions, addNotification]);
-
+// This effect checks for newly unlocked achievements and updates the previous unlocked state.
     return (
         <div className={styles.pageContainer}>
             <div className={styles.pageContent}>

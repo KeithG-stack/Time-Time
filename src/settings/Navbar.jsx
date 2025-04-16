@@ -1,7 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom"; // Use NavLink for active link styling
 import styles from "./Navbar.module.css";
-
+// This component is responsible for rendering the navigation bar
+// It uses NavLink from react-router-dom to handle navigation and active link styling
 const Navbar = () => {
     return (
         <nav className={styles.navbar}>
