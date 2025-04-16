@@ -82,7 +82,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={
                                 <TimerDisplay 
-                                    title="Focus Timer" 
+                                    title="FocusFlow" 
                                     addSession={addSession}
                                     initialTime={customTimer}
                                     isSoundEnabled={isSoundEnabled}
